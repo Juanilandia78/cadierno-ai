@@ -1,20 +1,12 @@
 def install():
 
-    print()
+    print("\nCadierno AI\n")
 
-    print("===================================")
-    print(" Cadierno AI")
-    print(" Instalando Framework")
-    print("===================================")
+    print("Estado:")
+    print("⚠ Instalación automática aún no implementada.")
 
-    print()
-
-    print("✔ Specialists")
-    print("✔ Workflows")
-    print("✔ Playbooks")
-    print("✔ Templates")
-    print("✔ Memory")
-
-    print()
-
-    print("Instalación finalizada.")
+    print("\nPróxima versión:")
+    print("- Copiar .ai")
+    print("- Copiar playbooks")
+    print("- Copiar checklists")
+    print("- Copiar templates")

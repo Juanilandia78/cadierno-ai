@@ -1,19 +1,12 @@
 def bootstrap():
 
-    print()
+    print("\nBootstrap\n")
 
-    print("===================================")
-    print(" Bootstrap")
-    print("===================================")
+    print("Estado:")
+    print("⚠ Análisis automático aún no implementado.")
 
-    print()
-
-    print("Analizando proyecto...")
-
-    print("✔ composer.json")
-    print("✔ package.json")
-    print("✔ docker-compose.yml")
-
-    print()
-
-    print("Knowledge generado correctamente.")
+    print("\nPróxima versión:")
+    print("- Detectar Laravel")
+    print("- Detectar Vue")
+    print("- Detectar Docker")
+    print("- Generar knowledge/")

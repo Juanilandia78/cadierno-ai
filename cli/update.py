@@ -1,19 +1,11 @@
 def update():
 
-    print()
+    print("\nUpdate\n")
 
-    print("===================================")
-    print(" Update")
-    print("===================================")
+    print("Estado:")
+    print("⚠ Actualización automática aún no implementada.")
 
-    print()
-
-    print("Actualizando Cadierno AI...")
-
-    print("✔ Specialists")
-    print("✔ Workflows")
-    print("✔ Playbooks")
-
-    print()
-
-    print("Framework actualizado.")
+    print("\nPróxima versión:")
+    print("- Actualizar specialists")
+    print("- Actualizar workflows")
+    print("- Actualizar playbooks")

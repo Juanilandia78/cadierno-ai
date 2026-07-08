@@ -1,22 +1,12 @@
 def doctor():
 
-    print()
+    print("\nCadierno Doctor\n")
 
-    print("===================================")
-    print(" Cadierno Doctor")
-    print("===================================")
-
-    print()
-
-    print("Estado del Framework")
-
-    print()
-
-    print("✔ Specialists")
-    print("✔ Workflows")
-    print("✔ Templates")
-    print("✔ Memory")
-
-    print()
-
-    print("Estado general: OK")
+    print("-----------------------------")
+    print("CLI................. OK")
+    print("Templates........... OK")
+    print("Playbooks........... OK")
+    print("Specialists......... OK")
+    print("Memory.............. OK")
+    print("Version............. 0.1.0")
+    print("-----------------------------")
