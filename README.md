@@ -2,35 +2,29 @@
 
 > **Pensá. Diseñá. Construí. Revisá. Evolucioná.**
 
-Cadierno AI es un framework de ingeniería asistida por Inteligencia Artificial.
+Cadierno AI es un framework de Ingeniería de Software Asistida por Inteligencia Artificial.
 
-Su objetivo es transformar asistentes como Claude Code, GitHub Copilot, Cursor o ChatGPT en un verdadero equipo de especialistas capaz de analizar, diseñar, desarrollar, documentar y revisar software de forma organizada.
+Su objetivo es transformar asistentes como Claude Code, GitHub Copilot, Cursor o ChatGPT en un verdadero equipo de especialistas capaz de comprender proyectos, diseñar soluciones, desarrollar software, documentar cambios y revisar la calidad del código.
 
 ---
 
-# ¿Qué es Cadierno AI?
+# Filosofía
 
-Cadierno AI no es una colección de prompts.
+La IA no reemplaza al desarrollador.
 
-No es una colección de reglas.
+Lo potencia.
 
-No es un único agente.
+Cadierno AI propone una metodología donde cada especialista tiene una responsabilidad clara y cada tarea sigue un proceso definido.
 
-Cadierno AI define una metodología para que la Inteligencia Artificial trabaje como un equipo de ingeniería de software.
-
-Cada especialista tiene una responsabilidad.
-
-Cada Workflow define un proceso.
-
-Cada Playbook representa conocimiento reutilizable.
-
-Cada Checklist garantiza calidad.
+El criterio humano siempre tiene la última palabra.
 
 ---
 
 # Componentes
 
 ## Specialists
+
+Equipo de especialistas que colaboran entre sí.
 
 - Architect
 - Backend Engineer
@@ -44,6 +38,12 @@ Cada Checklist garantiza calidad.
 
 ## Workflows
 
+Procesos reutilizables para resolver distintos tipos de trabajo.
+
+Actualmente incluye:
+
+- Bootstrap
+- Maintenance
 - New Feature
 - Bug Fix
 - Refactor
@@ -54,39 +54,53 @@ Cada Checklist garantiza calidad.
 
 ## Playbooks
 
-Biblioteca de buenas prácticas reutilizables.
+Biblioteca de conocimiento técnico reutilizable.
 
-Actualmente incluye:
+Incluye:
 
 - Laravel
+- Livewire
+- Vue
 - Docker
 - MySQL
 - Git
-- Livewire
-- Vue
 - Mercado Pago
+- Testing
 
 ---
 
-## Knowledge
+## Templates
 
-Cadierno AI aprende la arquitectura del proyecto antes de comenzar a desarrollar.
+Plantillas utilizadas para generar automáticamente la documentación de cada proyecto.
+
+Bootstrap utiliza estos templates para crear:
+
+- knowledge/project.md
+- knowledge/architecture.md
+- knowledge/decisions.md
+- knowledge/patterns.md
+- knowledge/integrations.md
+- knowledge/technical-debt.md
+- knowledge/developer.md
+
+---
+
+## Memory
+
+Cadierno AI dispone de una memoria propia para almacenar preferencias, aprendizajes y contexto del desarrollador.
+
+Esta información es independiente de cada proyecto.
 
 ---
 
 ## Styles
 
-Permite adaptar el tono de comunicación según el usuario o el equipo.
+Permite adaptar el estilo de comunicación.
 
----
+Actualmente:
 
-## Filosofía
-
-La IA no reemplaza al desarrollador.
-
-Lo potencia.
-
-El criterio humano siempre tiene la última palabra.
+- Profesional
+- Argentino
 
 ---
 
@@ -94,48 +108,38 @@ El criterio humano siempre tiene la última palabra.
 
 ## V1
 
-- Core
+- Core Framework
 - Specialists
 - Workflows
-- Bootstrap
-- Knowledge
 - Playbooks
-- Checklists
-
-## V1.1
-
-- Persistent Memory
-- Session History
-- Knowledge Generator
-
-## V1.2
-
-- Memory Providers
-- Mem0
-- MCP
-- Subagentes
+- Templates
+- Bootstrap
 
 ## V2
 
-- Cadierno Console
-- Automatización de Workflows
-- Marketplace de Playbooks
+- Workspace
+- Persistent Memory
+- Bootstrap Inteligente
+- Project Scanner
+- Maintenance Workflow
+- Legacy Workflow
+- Explain Code
+
+## V3
+
+- MCP
+- Automatización
+- Console
+- Marketplace
+- Integración con Mem0
 
 ---
 
 # Instalación
 
-Consultar:
+Ver:
 
-- INSTALL.md
-
----
-
-# Quick Start
-
-Consultar:
-
-- QUICKSTART.md
+install/bootstrap.md
 
 ---
 
