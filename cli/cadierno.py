@@ -2,10 +2,10 @@
 
 import argparse
 
-from install import install
-from bootstrap import bootstrap
-from update import update
-from doctor import doctor
+from commands.install import install
+from commands.bootstrap import bootstrap
+from commands.update import update
+from commands.doctor import doctor
 
 VERSION = "0.1.0"
 
@@ -24,18 +24,51 @@ def main():
 
     sub = parser.add_subparsers(dest="command")
 
-    sub.add_parser("install", help="Instala Cadierno AI en un proyecto")
-    sub.add_parser("bootstrap", help="Analiza un proyecto")
-    sub.add_parser("doctor", help="Diagnostica el proyecto")
-    sub.add_parser("update", help="Actualiza Cadierno AI")
+    # install
+    install_parser = sub.add_parser(
+        "install",
+        help="Instala Cadierno AI en un proyecto"
+    )
+
+    install_parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Ruta del proyecto"
+    )
+
+    # bootstrap
+    bootstrap_parser = sub.add_parser(
+        "bootstrap",
+        help="Analiza un proyecto"
+    )
+
+    bootstrap_parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Ruta del proyecto"
+    )
+
+    # doctor
+    sub.add_parser(
+        "doctor",
+        help="Diagnostica Cadierno AI"
+    )
+
+    # update
+    sub.add_parser(
+        "update",
+        help="Actualiza Cadierno AI"
+    )
 
     args = parser.parse_args()
 
     if args.command == "install":
-        install()
+        install(args.path)
 
     elif args.command == "bootstrap":
-        bootstrap()
+        bootstrap(args.path)
 
     elif args.command == "doctor":
         doctor()
