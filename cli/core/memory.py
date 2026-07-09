@@ -389,6 +389,55 @@ def search_observations(project_path: Path, query: str, scope: str = "workspace"
     return result
 
 
+def classify_supervisor_task(task: str) -> dict:
+
+    text = task.strip().lower()
+
+    workflow = "maintenance"
+    specialists = ["Architect", "Backend Engineer", "QA Engineer", "Code Reviewer"]
+    questions: list[str] = []
+
+    if any(token in text for token in ["mercado pago", "mercadopago", "mp"]):
+        workflow = "integration"
+        specialists = ["Architect", "Backend Engineer", "Security Engineer", "QA Engineer", "Code Reviewer"]
+
+        if any(token in text for token in ["checkout", "checkout pro", "wallet"]):
+            workflow = "new-feature"
+            specialists = ["Architect", "Backend Engineer", "QA Engineer", "Code Reviewer"]
+        elif any(token in text for token in ["oauth", "auth", "autentic", "login", "cuenta admin"]):
+            workflow = "integration"
+        elif any(token in text for token in ["suscripcion", "subscription", "plans", "plan"]):
+            workflow = "new-feature"
+            specialists = ["Architect", "Backend Engineer", "Database Specialist", "QA Engineer", "Code Reviewer"]
+        else:
+            questions.append("¿Es checkout, OAuth o suscripciones?")
+
+    elif any(token in text for token in ["bug", "error", "fix", "falla", "rompe"]):
+        workflow = "bugfix"
+        specialists = ["Backend Engineer", "QA Engineer", "Code Reviewer"]
+    elif any(token in text for token in ["legacy", "zend", "antiguo", "viejo"]):
+        workflow = "legacy"
+        specialists = ["Architect", "Backend Engineer", "QA Engineer"]
+    elif any(token in text for token in ["nuevo", "feature", "funcionalidad", "crear"]):
+        workflow = "new-feature"
+        specialists = ["Architect", "Backend Engineer", "Database Specialist", "QA Engineer"]
+    elif any(token in text for token in ["refactor", "limpiar", "cleanup", "deuda"]):
+        workflow = "refactor"
+        specialists = ["Architect", "Backend Engineer", "Code Reviewer"]
+    elif any(token in text for token in ["auditar", "audit", "seguridad", "performance"]):
+        workflow = "audit"
+        specialists = ["Architect", "DevOps Specialist", "Code Reviewer"]
+    elif any(token in text for token in ["explicar", "explain", "entender", "comprender"]):
+        workflow = "explain-code"
+        specialists = ["Documentation Specialist", "Backend Engineer"]
+
+    return {
+        "workflow": workflow,
+        "specialists": specialists,
+        "questions": questions,
+    }
+
+
 def get_recent_context(project_path: Path, scope: str = "workspace", limit: int = 10) -> dict:
 
     return {

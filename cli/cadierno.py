@@ -6,6 +6,7 @@ from commands.install import install
 from commands.bootstrap import bootstrap
 from commands.update import update
 from commands.doctor import doctor
+from commands.finish import finish
 from commands.uninstall import uninstall
 from commands.memory import (
     assist,
@@ -17,6 +18,7 @@ from commands.memory import (
     memory_set_profile,
     memory_set_style,
     memory_status,
+    supervisor,
 )
 
 VERSION = "0.2.2"
@@ -79,6 +81,32 @@ def main():
         nargs="?",
         default=".",
         help="Ruta del proyecto"
+    )
+
+    # finish
+    finish_parser = sub.add_parser(
+        "finish",
+        help="Muestra estado git, sugiere cierre y deja el repo listo para release"
+    )
+
+    finish_parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Ruta del proyecto"
+    )
+    finish_parser.add_argument(
+        "--push",
+        action="store_true",
+        help="Ejecuta push al remoto si el repo esta limpio"
+    )
+    finish_parser.add_argument(
+        "--branch",
+        help="Nombre de la rama a pushear (si no se indica, usa la actual)"
+    )
+    finish_parser.add_argument(
+        "--tag",
+        help="Tag a pushear al remoto"
     )
 
     # uninstall
@@ -216,6 +244,13 @@ def main():
     assist_parser.add_argument("task", help="Descripción de la tarea")
     assist_parser.add_argument("path", nargs="?", default=".", help="Ruta del proyecto")
 
+    supervisor_parser = sub.add_parser(
+        "supervisor",
+        help="Flujo supervisor: pregunta, delega y resume la tarea"
+    )
+    supervisor_parser.add_argument("task", help="Descripción de la idea o tarea")
+    supervisor_parser.add_argument("path", nargs="?", default=".", help="Ruta del proyecto")
+
     args = parser.parse_args()
 
     if args.command == "install":
@@ -229,6 +264,9 @@ def main():
 
     elif args.command == "update":
         update(args.path)
+
+    elif args.command == "finish":
+        finish(args.path, push=args.push, branch_name=args.branch, tag_name=args.tag)
 
     elif args.command == "uninstall":
         uninstall(args.path, args.purge)
@@ -255,6 +293,9 @@ def main():
 
     elif args.command == "assist":
         assist(args.path, args.task)
+
+    elif args.command == "supervisor":
+        supervisor(args.path, args.task)
 
     else:
         parser.print_help()

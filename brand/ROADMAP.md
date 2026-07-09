@@ -78,27 +78,36 @@ Estado: ✅ Completado
 - Sistema de resúmenes automáticos
 - Aprendizaje continuo
 
-# V3.0 - AI Engineering Platform
+# V3.0 - Supervisor Mode
 
 ## Objetivo
 
-Controlar el framework mediante comandos.
+Convertir Cadierno AI en un supervisor de trabajo asistido por especialistas.
 
-Ejemplos:
+Cadierno no escribe el codigo como protagonista principal.
+Cadierno coordina la idea, hace preguntas cuando falta contexto, delega la ejecucion a especialistas/agentes y te devuelve una revision clara para aprobar o corregir.
 
-/cad bootstrap
+### Principios
 
-/cad audit
+- Vos seguís siendo el dueño de la idea y de la decision final.
+- Los especialistas escriben y modifican codigo.
+- Cadierno organiza la tarea, guarda contexto y revisa resultados.
+- Si falta claridad, Cadierno pregunta antes de avanzar.
 
-/cad feature
+### Incluye
 
-/cad review
+- Modo idea a tarea.
+- Modo preguntas antes de ejecutar.
+- Delegacion a especialistas segun el tipo de trabajo.
+- Modo revision de codigo y riesgos.
+- Aprobacion final del usuario antes de cerrar cambios.
+- Integracion mas formal con agentes externos que escriben codigo.
 
-/cad bugfix
+### Fuera de alcance
 
-/cad refactor
-
-/cad memory
+- Programacion automatica completa sin supervision.
+- Reemplazar al agente principal de codigo del editor.
+- Convertir Cadierno en una plataforma generalista tipo marketplace.
 
 Estado: 📌 Backlog
 

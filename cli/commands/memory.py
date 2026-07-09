@@ -2,6 +2,7 @@ from pathlib import Path
 
 from core.memory import (
     add_history_event,
+    classify_supervisor_task,
     get_effective_style,
     get_history,
     get_recent_context,
@@ -249,3 +250,30 @@ def assist(path: str, task: str):
     print(f"Tarea.............. {task}")
     print(f"Workflow sugerido.. {workflow}")
     print("Specialists........ " + ", ".join(specialists))
+
+
+def supervisor(path: str, task: str):
+
+    project_path = Path(path).resolve()
+
+    if not project_path.exists() or not project_path.is_dir():
+        print("✖ La carpeta indicada no existe o no es válida.")
+        return
+
+    plan = classify_supervisor_task(task)
+
+    add_history_event(project_path, "supervisor", f"workflow={plan['workflow']} task={task}")
+
+    print("\nCadierno Supervisor\n")
+    print(f"Idea............... {task}")
+
+    if plan["questions"]:
+        print("Falta aclarar......")
+        for question in plan["questions"]:
+            print(f"- {question}")
+    else:
+        print("Falta aclarar...... No")
+
+    print(f"Workflow sugerido.. {plan['workflow']}")
+    print("Specialists........ " + ", ".join(plan["specialists"]))
+    print("\nSiguiente paso..... Responder la duda si la hay, o delegar la implementacion al especialista indicado.")
