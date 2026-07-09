@@ -149,6 +149,8 @@ INTEGRATION_RULES = {
     },
 }
 
+TECH_DEBT_MARKERS = ["todo", "fixme", "hack", "xxx", "deprecated"]
+
 
 def _safe_load_json(path: Path) -> dict:
 
@@ -407,6 +409,49 @@ def _collect_integrations(root: Path, composer_data: dict, package_data: dict) -
     return detected
 
 
+def _collect_technical_debt(root: Path) -> list[str]:
+
+    findings: list[str] = []
+
+    for current_root, dirs, files in os.walk(root):
+        dirs[:] = [d for d in dirs if d not in IGNORED_DIRS]
+
+        for filename in files:
+            full_path = Path(current_root) / filename
+
+            if full_path.suffix.lower() not in TEXT_FILE_EXTENSIONS:
+                continue
+
+            relative_path = full_path.relative_to(root)
+
+            try:
+                lines = full_path.read_text(encoding="utf-8", errors="ignore").splitlines()
+            except Exception:
+                continue
+
+            # Heurística 1: marcadores explícitos (TODO/FIXME/HACK/...)
+            for index, line in enumerate(lines, start=1):
+                lowered = line.lower()
+                if any(marker in lowered for marker in TECH_DEBT_MARKERS):
+                    snippet = line.strip()
+                    if len(snippet) > 100:
+                        snippet = snippet[:100] + "..."
+                    findings.append(f"{relative_path}:{index} -> {snippet}")
+                    if len(findings) >= 20:
+                        return findings
+
+            # Heurística 2: archivos potencialmente muy grandes
+            if "controller" in filename.lower() and len(lines) > 350:
+                findings.append(
+                    f"{relative_path} -> Controller extenso ({len(lines)} líneas), revisar separación de responsabilidades"
+                )
+
+            if len(findings) >= 20:
+                return findings
+
+    return findings
+
+
 def scan(path: Path) -> Project:
 
     project = Project()
@@ -448,6 +493,7 @@ def scan(path: Path) -> Project:
     project.dependencies = _collect_dependencies(composer_data, package_data)
     project.architecture_components = _collect_architecture_components(analysis_root)
     project.integrations = _collect_integrations(analysis_root, composer_data, package_data)
+    project.technical_debt_items = _collect_technical_debt(analysis_root)
 
     return project
     

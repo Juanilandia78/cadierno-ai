@@ -21,4 +21,5 @@ class Project:
     dependencies: list[str] = field(default_factory=list)
     architecture_components: list[str] = field(default_factory=list)
     integrations: list[str] = field(default_factory=list)
+    technical_debt_items: list[str] = field(default_factory=list)
     

@@ -6,6 +6,7 @@ from commands.install import install
 from commands.bootstrap import bootstrap
 from commands.update import update
 from commands.doctor import doctor
+from commands.uninstall import uninstall
 
 VERSION = "0.1.0"
 
@@ -69,6 +70,25 @@ def main():
         help="Ruta del proyecto"
     )
 
+    # uninstall
+    uninstall_parser = sub.add_parser(
+        "uninstall",
+        help="Desinstala Cadierno AI de un proyecto"
+    )
+
+    uninstall_parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Ruta del proyecto"
+    )
+
+    uninstall_parser.add_argument(
+        "--purge",
+        action="store_true",
+        help="Elimina también knowledge/ y memory/"
+    )
+
     args = parser.parse_args()
 
     if args.command == "install":
@@ -82,6 +102,9 @@ def main():
 
     elif args.command == "update":
         update(args.path)
+
+    elif args.command == "uninstall":
+        uninstall(args.path, args.purge)
 
     else:
         parser.print_help()

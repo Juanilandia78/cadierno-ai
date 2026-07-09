@@ -199,6 +199,31 @@ def _render_integrations_markdown(project) -> str:
 """
 
 
+def _render_technical_debt_markdown(project) -> str:
+
+    items = "\n".join(f"- {item}" for item in project.technical_debt_items)
+    if not items:
+        items = "- No se detectaron marcadores de deuda técnica en esta pasada automática."
+
+    return f"""# Deuda Técnica
+
+## Hallazgos automáticos
+
+{items}
+
+## Acciones sugeridas
+
+- Priorizar hallazgos con impacto en seguridad o datos.
+- Corregir TODO/FIXME relacionados a flujos críticos.
+- Dividir archivos grandes antes de agregar más funcionalidad.
+
+## Observaciones
+
+- Esta detección es heurística y debe validarse manualmente.
+- Archivo generado automáticamente por cadierno bootstrap.
+"""
+
+
 def bootstrap(path: str):
 
     project_path = Path(path).resolve()
@@ -224,8 +249,12 @@ def bootstrap(path: str):
     integrations_target = knowledge_dir / "integrations.md"
     integrations_target.write_text(_render_integrations_markdown(project), encoding="utf-8")
 
+    technical_debt_target = knowledge_dir / "technical-debt.md"
+    technical_debt_target.write_text(_render_technical_debt_markdown(project), encoding="utf-8")
+
     print("\nResultado:")
     print("✔ Proyecto analizado")
     print("✔ knowledge/project.md generado")
     print("✔ knowledge/architecture.md generado")
     print("✔ knowledge/integrations.md generado")
+    print("✔ knowledge/technical-debt.md generado")
