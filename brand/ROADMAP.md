@@ -62,18 +62,21 @@ Estado: ✅ Completado
 
 ## Objetivo
 
-Agregar proveedores externos de memoria y automatización avanzada.
+Consolidar memoria inteligente local y dejar base estable para integraciones futuras.
 
 ### Incluye
 
 - Provider local SQLite (base de memoria persistente)
 - MCP local de memoria (save/search/context/status)
 - Comando `cadierno assist` para sugerir workflow/specialists
-- Integración con Mem0 (opcional, fase siguiente)
-- Sistema de resúmenes automáticos (fase siguiente)
-- Aprendizaje continuo (fase siguiente)
 
-Estado: 🚧 En implementación
+Estado: ✅ Completado
+
+### Backlog post V2.2
+
+- Integración con Mem0 (opcional)
+- Sistema de resúmenes automáticos
+- Aprendizaje continuo
 
 # V3.0 - AI Engineering Platform
 
@@ -97,7 +100,7 @@ Ejemplos:
 
 /cad memory
 
-Estado: 🔮 Futuro
+Estado: 📌 Backlog
 
 ---
 
