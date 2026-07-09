@@ -57,9 +57,16 @@ def main():
     )
 
     # update
-    sub.add_parser(
+    update_parser = sub.add_parser(
         "update",
         help="Actualiza Cadierno AI"
+    )
+
+    update_parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Ruta del proyecto"
     )
 
     args = parser.parse_args()
@@ -74,7 +81,7 @@ def main():
         doctor()
 
     elif args.command == "update":
-        update()
+        update(args.path)
 
     else:
         parser.print_help()
