@@ -169,6 +169,47 @@ python cadierno.py doctor
 
 ---
 
+## cadierno memory
+
+Gestiona memoria persistente de usuario/workspace.
+
+Inicializar memoria:
+
+```bash
+python cadierno.py memory init /ruta/proyecto
+```
+
+Ver estado:
+
+```bash
+python cadierno.py memory status /ruta/proyecto
+```
+
+Configurar estilo Argentino o Professional:
+
+```bash
+python cadierno.py memory style argentino /ruta/proyecto --scope workspace
+python cadierno.py memory style professional /ruta/proyecto --scope user
+```
+
+Configurar perfil:
+
+```bash
+python cadierno.py memory profile /ruta/proyecto --name "Tu Nombre" --role "Software Engineer" --seniority "Senior" --scope user
+```
+
+Ver historial:
+
+```bash
+python cadierno.py memory history /ruta/proyecto --scope workspace --limit 20
+```
+
+Mem0 no es necesario para esto.
+
+Todo funciona localmente en V2.1.
+
+---
+
 ## Glosario simple (fundamental)
 
 ## Que es un Workflow
@@ -318,13 +359,17 @@ Pedi al inicio:
 
 ## Para dejarlo fijo por proyecto
 
-En AGENTS.md agrega una linea en Observaciones:
+Recomendado en V2.1:
 
-- Estilo preferido: Argentino
+```bash
+python cadierno.py memory style argentino /ruta/proyecto --scope workspace
+```
 
-O:
+O profesional:
 
-- Estilo preferido: Profesional
+```bash
+python cadierno.py memory style professional /ruta/proyecto --scope workspace
+```
 
 ---
 

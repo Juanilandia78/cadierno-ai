@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from core.memory import add_history_event, initialize_memory, mark_workspace_event
 from core.scanner import scan
 
 
@@ -235,6 +236,8 @@ def bootstrap(path: str):
         print("✖ La carpeta indicada no existe o no es válida.")
         return
 
+    initialize_memory(project_path)
+
     project = scan(project_path)
 
     knowledge_dir = project_path / "knowledge"
@@ -251,6 +254,9 @@ def bootstrap(path: str):
 
     technical_debt_target = knowledge_dir / "technical-debt.md"
     technical_debt_target.write_text(_render_technical_debt_markdown(project), encoding="utf-8")
+
+    mark_workspace_event(project_path, "bootstrap")
+    add_history_event(project_path, "bootstrap", "Análisis y generación de knowledge ejecutados")
 
     print("\nResultado:")
     print("✔ Proyecto analizado")

@@ -1,6 +1,8 @@
 from pathlib import Path
 import shutil
 
+from core.memory import add_history_event
+
 
 def _remove_path(path: Path) -> bool:
 
@@ -25,6 +27,8 @@ def uninstall(path: str, purge: bool = False):
     if not project.exists() or not project.is_dir():
         print("✖ La carpeta indicada no existe o no es válida.")
         return
+
+    add_history_event(project, "uninstall.start", f"purge={purge}")
 
     removed = 0
 
@@ -59,4 +63,8 @@ def uninstall(path: str, purge: bool = False):
 
     print("\nResumen:")
     print(f"✔ Elementos eliminados: {removed}")
+
+    # Si purge=True, la memoria de workspace puede desaparecer luego de este punto.
+    add_history_event(None, "uninstall.finish", f"project={project} removed={removed} purge={purge}")
+
     print("\nUninstall finalizado.")

@@ -2,6 +2,8 @@ from pathlib import Path
 import hashlib
 import shutil
 
+from core.memory import add_history_event, initialize_memory, mark_workspace_event
+
 
 SYNC_DIRECTORIES = [
     ".ai",
@@ -73,6 +75,8 @@ def update(path: str):
         print("✖ La carpeta indicada no existe o no es válida.")
         return
 
+    initialize_memory(project)
+
     total_copied = 0
     total_unchanged = 0
     total_skipped = 0
@@ -118,5 +122,12 @@ def update(path: str):
     print(f"✔ Nuevos archivos copiados: {total_copied}")
     print(f"• Archivos sin cambios: {total_unchanged}")
     print(f"⚠ Archivos locales preservados (conflicto): {total_skipped}")
+
+    mark_workspace_event(project, "update")
+    add_history_event(
+        project,
+        "update",
+        f"copied={total_copied} unchanged={total_unchanged} skipped={total_skipped}",
+    )
 
     print("\nUpdate finalizado (modo seguro).")

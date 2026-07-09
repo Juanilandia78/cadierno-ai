@@ -35,46 +35,45 @@ Crear la base del framework.
 - README
 - Instalación
 
-Estado: 🚧 En desarrollo
+Estado: ✅ Completado
 
 ---
 
-# V1.1 - Knowledge & Memory
+# V2.1 - Memoria Persistente
 
 ## Objetivo
 
-Que Cadierno AI recuerde el contexto de cada proyecto.
+Estabilizar el uso diario con memoria persistente de usuario y workspace.
 
 ### Incluye
 
-- Generación automática de `knowledge/project.md`
-- Generación de `knowledge/patterns.md`
-- Generación de `knowledge/decisions.md`
-- Historial de sesiones
-- Memoria local basada en Markdown
+- Memoria persistente local de usuario (`~/.cadierno-ai`)
+- Memoria de workspace (`memory/.cadierno`)
+- Perfil editable (nombre, rol, seniority)
+- Estilo de comunicación persistente (Argentino/Professional)
+- Historial de eventos (install/bootstrap/update/uninstall)
+- Comando `cadierno memory` (init/status/style/profile/history)
 
-Estado: ⏳ Planificado
+Estado: ✅ Completado
 
 ---
 
-# V1.2 - Intelligent Memory
+# V2.2 - Intelligent Memory
 
 ## Objetivo
 
-Separar Cadierno AI del proveedor de memoria.
+Agregar proveedores externos de memoria y automatización avanzada.
 
 ### Incluye
 
 - Memory Providers
-- Integración con Mem0
+- Integración con Mem0 (opcional)
 - Sistema de resúmenes automáticos
 - Aprendizaje continuo
 
 Estado: ⏳ Planificado
 
----
-
-# V2.0 - Cadierno Console
+# V3.0 - AI Engineering Platform
 
 ## Objetivo
 
@@ -95,25 +94,6 @@ Ejemplos:
 /cad refactor
 
 /cad memory
-
-Estado: 💡 Idea
-
----
-
-# V3.0 - AI Engineering Platform
-
-## Objetivo
-
-Convertir Cadierno AI en una plataforma completa.
-
-### Posibles características
-
-- Subagentes automáticos
-- MCPs
-- Marketplace de Playbooks
-- Dashboard
-- CLI
-- Extensión para VS Code
 
 Estado: 🔮 Futuro
 

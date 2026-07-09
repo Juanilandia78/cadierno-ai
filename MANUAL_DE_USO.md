@@ -2,9 +2,9 @@
 
 ## Objetivo
 
-Este manual explica como usar Cadierno AI en su version V1 para iniciar trabajo real en un proyecto existente sin cambiar su arquitectura.
+Este manual explica como usar Cadierno AI en su version V2.1 para trabajo diario real en proyectos existentes sin cambiar arquitectura innecesariamente.
 
-Cadierno AI en V1 se centra en cerrar este flujo:
+Cadierno AI en V2.1 se centra en cerrar este flujo:
 
 1. Instalar assets base de Cadierno AI en el proyecto.
 2. Ejecutar bootstrap para detectar stack y generar conocimiento inicial.
@@ -12,7 +12,7 @@ Cadierno AI en V1 se centra en cerrar este flujo:
 
 ---
 
-## Alcance de V1
+## Alcance de V2.1
 
 Estado de comandos CLI:
 
@@ -21,19 +21,23 @@ Estado de comandos CLI:
 - cadierno doctor: funcional
 - cadierno uninstall: funcional
 - cadierno update: funcional (modo seguro)
+- cadierno memory: funcional
 
-Lo que V1 SI resuelve:
+Lo que V2.1 SI resuelve:
 
 - Inicializacion rapida del proyecto con .ai, playbooks y checklists.
 - Creacion de knowledge/ y memory/.
 - Generacion de AGENTS.md.
 - Deteccion automatica de stack base y generacion de knowledge/project.md.
 - Generacion inicial de knowledge/architecture.md, knowledge/integrations.md y knowledge/technical-debt.md.
+- Memoria persistente de usuario y workspace.
+- Perfil de desarrollador editable por CLI.
+- Historial de eventos entre proyectos.
 
-Lo que V1 todavia NO resuelve:
+Lo que V2.1 todavia NO resuelve:
 
-- Analisis profundo de arquitectura, integraciones, deuda tecnica y patrones.
-- Actualizacion automatica (update).
+- Integración con Mem0/MCP (opcional y futuro).
+- Automatización completa de specialists/workflows.
 
 ---
 
@@ -99,6 +103,31 @@ Y genera:
 
 ---
 
+## Memoria persistente (V2.1)
+
+Cadierno AI guarda memoria en dos niveles:
+
+- Usuario global: ~/.cadierno-ai
+- Workspace/proyecto: /ruta/proyecto/memory/.cadierno
+
+Comandos principales:
+
+```bash
+python cadierno.py memory init /ruta/al/proyecto
+python cadierno.py memory status /ruta/al/proyecto
+python cadierno.py memory style argentino /ruta/al/proyecto --scope workspace
+python cadierno.py memory profile /ruta/al/proyecto --name "Tu Nombre" --role "Software Engineer" --seniority "Senior" --scope user
+python cadierno.py memory history /ruta/al/proyecto --scope workspace --limit 20
+```
+
+El estilo de comunicación efectivo se resuelve por prioridad:
+
+1. workspace
+2. user
+3. professional por defecto
+
+---
+
 ## Uso recomendado diario
 
 Flujo de trabajo sugerido por sprint:
@@ -154,15 +183,17 @@ Caso: salida inesperada en bootstrap.
 
 ---
 
-## Estado de cierre V1
+## Estado de cierre V2.1
 
-Cadierno AI esta en estado utilizable para V1 si tu objetivo es:
+Cadierno AI esta en estado utilizable para V2.1 si tu objetivo es:
 
 - instalar metodologia en un proyecto existente;
-- detectar stack base;
-- arrancar trabajo asistido por especialistas con contexto inicial.
+- detectar stack base y generar knowledge;
+- persistir perfil/estilo/historial en uso diario.
 
-No esta cerrado para analisis profundo automatico (eso queda para proxima version).
+Mem0 no es obligatorio para V2.1.
+
+Es opcional para V2.2 cuando quieras memoria externalizada y aprendizaje cross-device.
 
 ---
 

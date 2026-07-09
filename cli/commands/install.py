@@ -1,6 +1,8 @@
 from pathlib import Path
 import shutil
 
+from core.memory import add_history_event, initialize_memory
+
 
 def copy_directory(source: Path, destination: Path):
     """
@@ -141,6 +143,9 @@ def install(path: str):
         memory / "snippets.md",
         "# Snippets\n\nFragmentos reutilizables.\n"
     )
+
+    initialize_memory(project)
+    add_history_event(project, "install", "Cadierno AI instalado en proyecto")
 
     template = framework / "templates" / "AGENTS.template.md"
     agent = project / "AGENTS.md"
