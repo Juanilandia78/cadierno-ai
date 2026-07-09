@@ -44,6 +44,8 @@ Actualmente incluye:
 
 - Bootstrap
 - Maintenance
+- Legacy
+- Explain Code
 - New Feature
 - Bug Fix
 - Refactor
