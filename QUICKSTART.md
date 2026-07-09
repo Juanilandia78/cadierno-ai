@@ -1,87 +1,45 @@
 # Quick Start
 
-En menos de cinco minutos podés comenzar a utilizar Cadierno AI.
+En menos de cinco minutos podes empezar con Cadierno AI.
 
----
+## Paso 1: clonar e instalar
 
-# Paso 1
+```bash
+git clone https://github.com/TU_USUARIO/cadierno-ai.git
+cd cadierno-ai
+./install/install_cli.sh
+```
 
-Copiar Cadierno AI dentro del proyecto.
+## Paso 2: bootstrap del proyecto
 
----
+```bash
+./.venv/bin/python cli/cadierno.py bootstrap /ruta/proyecto
+```
 
-# Paso 2
+## Paso 3: inicializar memoria
 
-Abrir Claude Code (o el asistente de IA de tu preferencia).
+```bash
+./.venv/bin/python cli/cadierno.py memory init /ruta/proyecto
+./.venv/bin/python cli/cadierno.py memory status /ruta/proyecto
+```
 
----
+## Paso 4: empezar a trabajar
 
-# Paso 3
+Ejemplos de uso:
 
-Solicitar:
+```bash
+./.venv/bin/python cli/cadierno.py assist "hay que corregir bug en checkout" /ruta/proyecto
+./.venv/bin/python cli/cadierno.py memory save /ruta/proyecto --title "Decision auth" --content "Se unifica middleware" --type decision --tags auth,backend
+```
 
-> Ejecutá el Bootstrap de Cadierno AI.
+## SQLite
 
----
+No requiere instalacion manual. Cadierno usa `sqlite3` incluido en Python.
 
-# Paso 4
-
-Esperar que analice:
-
-- Framework
-- Arquitectura
-- Base de datos
-- Convenciones
-- Infraestructura
-
----
-
-# Paso 5
-
-Comenzar a trabajar.
-
-Ejemplos:
-
-> Implementá esta nueva funcionalidad utilizando el Workflow New Feature.
-
-> Corregí este bug utilizando el Workflow Bug Fix.
-
-> Auditá este módulo utilizando el Workflow Audit.
-
-> Refactorizá este código utilizando el Workflow Refactor.
-
----
-
-# Especialistas
-
-Cadierno AI seleccionará automáticamente los especialistas necesarios.
-
-Por ejemplo:
-
-Architect
-
-↓
-
-Backend
-
-↓
-
-Database
-
-↓
-
-QA
-
-↓
-
-Reviewer
-
----
-
-# Filosofía
+## Filosofia
 
 Primero comprender.
 
-Después diseñar.
+Despues disenar.
 
 Finalmente implementar.

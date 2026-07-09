@@ -22,6 +22,7 @@ Estado de comandos CLI:
 - cadierno uninstall: funcional
 - cadierno update: funcional (modo seguro)
 - cadierno memory: funcional
+- cadierno assist: funcional
 
 Lo que V2.1 SI resuelve:
 
@@ -38,6 +39,17 @@ Lo que V2.1 todavia NO resuelve:
 
 - Integración con Mem0/MCP (opcional y futuro).
 - Automatización completa de specialists/workflows.
+
+---
+
+## Avances de V2.2
+
+Actualmente Cadierno incluye mejoras V2.2 sobre memoria:
+
+- Backend de memoria local en SQLite.
+- MCP local (stdio) para herramientas de memoria en `cli/mcp_memory_server.py`.
+- Operaciones de observaciones: save/search/context.
+- Sugerencia automática de workflow/specialists con `cadierno assist`.
 
 ---
 
@@ -118,6 +130,10 @@ python cadierno.py memory status /ruta/al/proyecto
 python cadierno.py memory style argentino /ruta/al/proyecto --scope workspace
 python cadierno.py memory profile /ruta/al/proyecto --name "Tu Nombre" --role "Software Engineer" --seniority "Senior" --scope user
 python cadierno.py memory history /ruta/al/proyecto --scope workspace --limit 20
+python cadierno.py memory save /ruta/al/proyecto --title "Decisión" --content "Usar service layer" --type decision --tags arquitectura,backend
+python cadierno.py memory search "service layer" /ruta/al/proyecto --scope workspace --limit 10
+python cadierno.py memory context /ruta/al/proyecto --scope workspace --limit 10
+python cadierno.py assist "Hay un bug en pagos duplicados" /ruta/al/proyecto
 ```
 
 El estilo de comunicación efectivo se resuelve por prioridad:

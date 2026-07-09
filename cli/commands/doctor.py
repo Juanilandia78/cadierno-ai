@@ -8,5 +8,5 @@ def doctor():
     print("Playbooks........... OK")
     print("Specialists......... OK")
     print("Memory.............. OK")
-    print("Version............. 0.2.1")
+    print("Version............. 0.2.2")
     print("-----------------------------")

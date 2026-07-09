@@ -8,14 +8,18 @@ from commands.update import update
 from commands.doctor import doctor
 from commands.uninstall import uninstall
 from commands.memory import (
+    assist,
+    memory_context,
     memory_history,
     memory_init,
+    memory_save,
+    memory_search,
     memory_set_profile,
     memory_set_style,
     memory_status,
 )
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 
 
 def main():
@@ -162,6 +166,56 @@ def main():
         help="Cantidad de eventos a mostrar"
     )
 
+    memory_save_parser = memory_sub.add_parser(
+        "save",
+        help="Guarda una observación manual en memoria"
+    )
+    memory_save_parser.add_argument("path", nargs="?", default=".", help="Ruta del proyecto")
+    memory_save_parser.add_argument("--title", required=True, help="Título de la observación")
+    memory_save_parser.add_argument("--content", required=True, help="Contenido de la observación")
+    memory_save_parser.add_argument("--type", default="note", help="Tipo (note, decision, bugfix, etc.)")
+    memory_save_parser.add_argument("--tags", help="Tags separados por coma")
+    memory_save_parser.add_argument(
+        "--scope",
+        choices=["workspace", "user"],
+        default="workspace",
+        help="Alcance de la observación"
+    )
+
+    memory_search_parser = memory_sub.add_parser(
+        "search",
+        help="Busca observaciones en memoria"
+    )
+    memory_search_parser.add_argument("query", help="Texto a buscar")
+    memory_search_parser.add_argument("path", nargs="?", default=".", help="Ruta del proyecto")
+    memory_search_parser.add_argument(
+        "--scope",
+        choices=["workspace", "user"],
+        default="workspace",
+        help="Alcance de búsqueda"
+    )
+    memory_search_parser.add_argument("--limit", type=int, default=10, help="Cantidad máxima")
+
+    memory_context_parser = memory_sub.add_parser(
+        "context",
+        help="Muestra contexto reciente (eventos + observaciones)"
+    )
+    memory_context_parser.add_argument("path", nargs="?", default=".", help="Ruta del proyecto")
+    memory_context_parser.add_argument(
+        "--scope",
+        choices=["workspace", "user"],
+        default="workspace",
+        help="Alcance de contexto"
+    )
+    memory_context_parser.add_argument("--limit", type=int, default=10, help="Cantidad máxima")
+
+    assist_parser = sub.add_parser(
+        "assist",
+        help="Sugiere workflow y specialists para una tarea"
+    )
+    assist_parser.add_argument("task", help="Descripción de la tarea")
+    assist_parser.add_argument("path", nargs="?", default=".", help="Ruta del proyecto")
+
     args = parser.parse_args()
 
     if args.command == "install":
@@ -190,8 +244,17 @@ def main():
             memory_set_profile(args.path, args.name, args.role, args.seniority, args.scope)
         elif args.memory_command == "history":
             memory_history(args.path, args.scope, args.limit)
+        elif args.memory_command == "save":
+            memory_save(args.path, args.title, args.content, args.type, args.tags, args.scope)
+        elif args.memory_command == "search":
+            memory_search(args.path, args.query, args.scope, args.limit)
+        elif args.memory_command == "context":
+            memory_context(args.path, args.scope, args.limit)
         else:
             memory_parser.print_help()
+
+    elif args.command == "assist":
+        assist(args.path, args.task)
 
     else:
         parser.print_help()

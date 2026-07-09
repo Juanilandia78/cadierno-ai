@@ -204,9 +204,35 @@ Ver historial:
 python cadierno.py memory history /ruta/proyecto --scope workspace --limit 20
 ```
 
+Guardar una observacion (decision, bugfix, etc.):
+
+```bash
+python cadierno.py memory save /ruta/proyecto --title "Decision de arquitectura" --content "Usar Service Layer" --type decision --tags arquitectura,backend
+```
+
+Buscar observaciones:
+
+```bash
+python cadierno.py memory search "Service Layer" /ruta/proyecto --scope workspace --limit 10
+```
+
+Ver contexto reciente:
+
+```bash
+python cadierno.py memory context /ruta/proyecto --scope workspace --limit 10
+```
+
+Sugerencia automática de workflow + specialists:
+
+```bash
+python cadierno.py assist "Hay un bug de pagos duplicados" /ruta/proyecto
+```
+
 Mem0 no es necesario para esto.
 
 Todo funciona localmente en V2.1.
+
+En V2.2, la persistencia local usa SQLite.
 
 ---
 

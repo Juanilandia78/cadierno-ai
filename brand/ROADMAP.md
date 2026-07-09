@@ -66,12 +66,14 @@ Agregar proveedores externos de memoria y automatización avanzada.
 
 ### Incluye
 
-- Memory Providers
-- Integración con Mem0 (opcional)
-- Sistema de resúmenes automáticos
-- Aprendizaje continuo
+- Provider local SQLite (base de memoria persistente)
+- MCP local de memoria (save/search/context/status)
+- Comando `cadierno assist` para sugerir workflow/specialists
+- Integración con Mem0 (opcional, fase siguiente)
+- Sistema de resúmenes automáticos (fase siguiente)
+- Aprendizaje continuo (fase siguiente)
 
-Estado: ⏳ Planificado
+Estado: 🚧 En implementación
 
 # V3.0 - AI Engineering Platform
 

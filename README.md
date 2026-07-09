@@ -135,13 +135,28 @@ Actualmente:
 - Marketplace
 - Integración con Mem0
 
+Nota estado actual:
+
+- V2.2 ya incluye memoria persistente en SQLite, comandos `memory` y servidor MCP-like local.
+- V3 queda orientado a integraciones avanzadas y automatizacion ampliada.
+
 ---
 
 # Instalación
 
 Ver:
 
-install/bootstrap.md
+INSTALL.md
+
+Instalacion rapida:
+
+```bash
+git clone https://github.com/TU_USUARIO/cadierno-ai.git
+cd cadierno-ai
+./install/install_cli.sh
+```
+
+Cadierno usa SQLite via `sqlite3` del standard library de Python, sin instalacion extra.
 
 ---
 
