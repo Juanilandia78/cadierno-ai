@@ -127,6 +127,96 @@ class ScannerFrameworkDetectionTests(unittest.TestCase):
             self.assertEqual(project.frontend, "React")
             self.assertIn("JavaScript", project.language)
 
+    def test_detects_livewire_and_related_laravel_dirs(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_json(
+                root / "composer.json",
+                {
+                    "require": {
+                        "php": "^8.2",
+                        "laravel/framework": "^12.0",
+                    }
+                },
+            )
+            for directory in [
+                "app/Livewire/Admin",
+                "app/Actions/Fortify",
+                "app/Mail",
+                "app/Notifications",
+                "app/Providers",
+                "app/View/Components",
+            ]:
+                (root / directory).mkdir(parents=True)
+
+            project = scan(root)
+
+            self.assertIn("Livewire", project.architecture_components)
+            self.assertIn("Actions", project.architecture_components)
+            self.assertIn("Mail", project.architecture_components)
+            self.assertIn("Notifications", project.architecture_components)
+            self.assertIn("Providers", project.architecture_components)
+            self.assertIn("View Components", project.architecture_components)
+
+    def test_detects_database_per_tenant_via_stancl_tenancy(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_json(
+                root / "composer.json",
+                {
+                    "require": {
+                        "php": "^8.2",
+                        "laravel/framework": "^12.0",
+                        "stancl/tenancy": "^3.9",
+                    }
+                },
+            )
+            (root / "app/Models").mkdir(parents=True)
+            (root / "app/Models/Tenant.php").write_text("<?php\n", encoding="utf-8")
+            (root / "database/migrations/tenant").mkdir(parents=True)
+            (root / "routes").mkdir(parents=True)
+            (root / "routes/tenant.php").write_text("<?php\n", encoding="utf-8")
+            config_dir = root / "config"
+            config_dir.mkdir(parents=True)
+            (config_dir / "tenancy.php").write_text(
+                """
+                <?php
+                return [
+                    'bootstrappers' => [
+                        Stancl\\Tenancy\\Bootstrappers\\DatabaseTenancyBootstrapper::class,
+                    ],
+                    'database' => [
+                        'central_connection' => env('DB_CONNECTION', 'mysql'),
+                    ],
+                ];
+                """,
+                encoding="utf-8",
+            )
+
+            project = scan(root)
+
+            self.assertEqual(project.multitenancy, "Detectado")
+            self.assertIn("DB-per-tenant", project.multitenancy_strategy)
+            self.assertTrue(any("stancl/tenancy" in item for item in project.multitenancy_evidence))
+
+    def test_no_multitenancy_when_no_evidence(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_json(
+                root / "composer.json",
+                {
+                    "require": {
+                        "php": "^8.2",
+                        "laravel/framework": "^12.0",
+                    }
+                },
+            )
+
+            project = scan(root)
+
+            self.assertEqual(project.multitenancy, "No detectado")
+            self.assertEqual(project.multitenancy_evidence, [])
+
     def test_detects_only_mercado_pago_when_present(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

@@ -22,4 +22,8 @@ class Project:
     architecture_components: list[str] = field(default_factory=list)
     integrations: list[str] = field(default_factory=list)
     technical_debt_items: list[str] = field(default_factory=list)
+
+    multitenancy: str = "No detectado"
+    multitenancy_strategy: str = "No aplica"
+    multitenancy_evidence: list[str] = field(default_factory=list)
     

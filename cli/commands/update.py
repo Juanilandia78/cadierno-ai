@@ -118,6 +118,26 @@ def update(path: str):
     else:
         print("⚠ No se encontró templates/AGENTS.template.md")
 
+    print("\nSincronizando CLAUDE.md...\n")
+
+    claude_template = framework / "templates" / "CLAUDE.template.md"
+    target_claude = project / "CLAUDE.md"
+
+    if claude_template.exists():
+        result = _safe_copy_file(claude_template, target_claude)
+
+        if result == "copied":
+            print("✔ CLAUDE.md copiado (referencia a AGENTS.md)")
+            total_copied += 1
+        elif result == "unchanged":
+            print("• CLAUDE.md sin cambios")
+            total_unchanged += 1
+        else:
+            print("⚠ CLAUDE.md personalizado: se conserva archivo local")
+            total_skipped += 1
+    else:
+        print("⚠ No se encontró templates/CLAUDE.template.md")
+
     print("\nResumen:")
     print(f"✔ Nuevos archivos copiados: {total_copied}")
     print(f"• Archivos sin cambios: {total_unchanged}")

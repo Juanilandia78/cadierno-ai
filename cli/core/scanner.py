@@ -100,6 +100,27 @@ ARCHITECTURE_DIR_PATTERNS = {
         Path("app/Traits"),
         Path("src/Traits"),
     ],
+    "Livewire": [
+        Path("app/Livewire"),
+        Path("app/Http/Livewire"),
+    ],
+    "Actions": [
+        Path("app/Actions"),
+        Path("src/Action"),
+        Path("src/Actions"),
+    ],
+    "Mail": [
+        Path("app/Mail"),
+    ],
+    "Notifications": [
+        Path("app/Notifications"),
+    ],
+    "Providers": [
+        Path("app/Providers"),
+    ],
+    "View Components": [
+        Path("app/View/Components"),
+    ],
 }
 
 INTEGRATION_RULES = {
@@ -150,6 +171,26 @@ INTEGRATION_RULES = {
 }
 
 TECH_DEBT_MARKERS = ["todo", "fixme", "hack", "xxx", "deprecated"]
+
+TENANCY_PACKAGES = {
+    "stancl/tenancy": "stancl/tenancy",
+    "spatie/laravel-multitenancy": "spatie/laravel-multitenancy",
+    "tenancy/tenancy": "tenancy/tenancy",
+    "hyn/multi-tenant": "hyn/multi-tenant",
+}
+
+TENANT_STRUCTURE_PATTERNS = {
+    Path("app/Models/Tenant.php"): "Modelo Tenant (app/Models/Tenant.php)",
+    Path("database/migrations/tenant"): "Migraciones separadas para tenant (database/migrations/tenant)",
+    Path("routes/tenant.php"): "Rutas de tenant (routes/tenant.php)",
+    Path("config/tenancy.php"): "Configuración de tenancy (config/tenancy.php)",
+}
+
+DB_PER_TENANT_CONFIG_MARKERS = [
+    "databasetenancybootstrapper",
+    "central_connection",
+    "tenantdatabasemanager",
+]
 
 
 def _safe_load_json(path: Path) -> dict:
@@ -278,6 +319,40 @@ def _detect_database(composer_data: dict, package_data: dict, docker_compose_tex
         return "No detectado"
 
     return " / ".join(dict.fromkeys(detected))
+
+
+def _detect_multitenancy(root: Path, composer_data: dict) -> tuple[str, str, list[str]]:
+
+    deps = {
+        **composer_data.get("require", {}),
+        **composer_data.get("require-dev", {}),
+    }
+
+    evidence: list[str] = []
+
+    for package, label in TENANCY_PACKAGES.items():
+        if package in deps:
+            evidence.append(f"Paquete Composer: {label}")
+
+    for relative_path, label in TENANT_STRUCTURE_PATTERNS.items():
+        if (root / relative_path).exists():
+            evidence.append(label)
+
+    if not evidence:
+        return "No detectado", "No aplica", []
+
+    strategy = "No determinada (revisar manualmente)"
+
+    tenancy_config = root / "config" / "tenancy.php"
+    if tenancy_config.exists():
+        config_text = tenancy_config.read_text(encoding="utf-8", errors="ignore").lower()
+        if any(marker in config_text for marker in DB_PER_TENANT_CONFIG_MARKERS):
+            strategy = "Base de datos por tenant (DB-per-tenant)"
+
+    if strategy.startswith("No determinada") and (root / "database/migrations/tenant").exists():
+        strategy = "Probable base de datos por tenant (migraciones separadas en database/migrations/tenant)"
+
+    return "Detectado", strategy, evidence
 
 
 def _detect_infrastructure(docker_compose_text: str, dockerfile_text: str) -> str:
@@ -494,6 +569,9 @@ def scan(path: Path) -> Project:
     project.architecture_components = _collect_architecture_components(analysis_root)
     project.integrations = _collect_integrations(analysis_root, composer_data, package_data)
     project.technical_debt_items = _collect_technical_debt(analysis_root)
+    project.multitenancy, project.multitenancy_strategy, project.multitenancy_evidence = _detect_multitenancy(
+        analysis_root, composer_data
+    )
 
     return project
     

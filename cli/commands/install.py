@@ -161,6 +161,24 @@ def install(path: str):
 
             print("• Ya existe: AGENTS.md")
 
+    claude_template = framework / "templates" / "CLAUDE.template.md"
+    claude_file = project / "CLAUDE.md"
+
+    if claude_template.exists():
+
+        if not claude_file.exists():
+
+            shutil.copy2(claude_template, claude_file)
+            print("✔ Archivo: CLAUDE.md (referencia a AGENTS.md para Claude Code)")
+
+        elif "@AGENTS.md" in claude_file.read_text(encoding="utf-8", errors="ignore"):
+
+            print("• Ya existe: CLAUDE.md (ya referencia AGENTS.md)")
+
+        else:
+
+            print("⚠ Ya existe CLAUDE.md sin referenciar AGENTS.md: agregá la línea '@AGENTS.md' manualmente para que Claude Code cargue el contexto de Cadierno AI")
+
     print()
     print("===================================")
     print(" Instalación finalizada correctamente")

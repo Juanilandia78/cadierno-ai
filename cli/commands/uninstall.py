@@ -17,6 +17,24 @@ def _remove_path(path: Path) -> bool:
     return True
 
 
+def _remove_claude_bridge(path: Path) -> str:
+    """
+    Elimina CLAUDE.md solo si es el bridge generado por Cadierno (@AGENTS.md).
+    Si el usuario le agregó contenido propio, se conserva.
+    """
+
+    if not path.exists():
+        return "missing"
+
+    content = path.read_text(encoding="utf-8", errors="ignore").strip()
+
+    if content != "@AGENTS.md":
+        return "customized"
+
+    path.unlink()
+    return "removed"
+
+
 def uninstall(path: str, purge: bool = False):
 
     project = Path(path).resolve()
@@ -45,6 +63,16 @@ def uninstall(path: str, purge: bool = False):
             removed += 1
         else:
             print(f"• No existe: {target.name}")
+
+    claude_result = _remove_claude_bridge(project / "CLAUDE.md")
+
+    if claude_result == "removed":
+        print("✔ Eliminado: CLAUDE.md")
+        removed += 1
+    elif claude_result == "customized":
+        print("⚠ CLAUDE.md personalizado: se conserva (no se toca)")
+    else:
+        print("• No existe: CLAUDE.md")
 
     if purge:
         purge_targets = [

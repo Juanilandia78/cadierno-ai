@@ -20,6 +20,21 @@ Cadierno AI te ordena el proceso.
 
 ---
 
+## Filosofia de uso
+
+Cadierno AI no es una lista de prompts sueltos, es una forma de trabajar. La idea de fondo (el detalle completo queda instalado en `.ai/CADIERNO.md` de cada proyecto) se resume en:
+
+1. **La IA es un companero, no un reemplazo.** Las decisiones importantes son tuyas.
+2. **Pensar antes de programar.** Arquitectura primero, implementacion despues.
+3. **El contexto manda sobre la tecnologia.** Cada proyecto tiene su propia historia, su propio stack y sus propias convenciones (Laravel clasico, Livewire, multi-tenant con `stancl/tenancy`, lo que sea). Cadierno AI se adapta al proyecto, no al reves.
+4. **Simplicidad por sobre complejidad innecesaria.**
+5. **Calidad no negociable**: arquitectura, seguridad, legibilidad, mantenibilidad, rendimiento.
+6. **Documentacion y pruebas son parte del trabajo**, no un extra.
+
+Por eso tiene sentido ajustar `knowledge/` y los detectores de `bootstrap` a como trabajas vos en el dia a dia (por ejemplo, sumar deteccion de multi-tenancy si tus proyectos usan ese patron). Adaptar la herramienta a tu flujo real es exactamente lo que la filosofia pide, no es "usarla mal".
+
+---
+
 ## Idea principal
 
 Cadierno AI funciona como un equipo virtual:
@@ -51,6 +66,11 @@ Que hace:
 - crea knowledge/
 - crea memory/
 - crea AGENTS.md
+- crea CLAUDE.md (solo una linea: `@AGENTS.md`)
+
+Importante: **`AGENTS.md`, `.ai/`, `playbooks/` y `checklists/` los crea `install`, no `bootstrap`.** Si corres `bootstrap` sobre un proyecto donde nunca corriste `install`, vas a terminar con `knowledge/` y `memory/` pero sin `AGENTS.md` ni `.ai/`. Son dos pasos independientes a proposito: `install` monta el framework (roles, playbooks, checklists), `bootstrap` analiza el codigo. Si ya tenes `knowledge/` porque corriste `bootstrap` solo, podes correr `install` despues sin perder nada (no pisa archivos existentes).
+
+Sobre `CLAUDE.md`: Claude Code (el agente con el que estas hablando ahora mismo) no lee `AGENTS.md` solo, unicamente lee `CLAUDE.md` al arrancar sesion. Por eso `install` te crea un `CLAUDE.md` con la linea `@AGENTS.md`, que es la sintaxis de import de Claude Code: hace que todo el contenido de `AGENTS.md` (y por lo tanto, indirectamente, la filosofia y el contexto de Cadierno) se cargue solo en cada sesion, sin que tengas que pedirlo vos cada vez. Si ya tenias un `CLAUDE.md` propio con contenido distinto, `install`/`update` no lo pisan: te avisan para que agregues la linea `@AGENTS.md` a mano.
 
 ---
 
@@ -62,21 +82,24 @@ python cadierno.py bootstrap /ruta/al/proyecto
 
 Que detecta:
 
-- lenguaje
-- framework
+- lenguaje (PHP, JavaScript/TypeScript)
+- framework (Laravel, Symfony, Zend, React, Vue)
 - frontend
-- base de datos
-- infraestructura
-- arquitectura basica
-- integraciones
-- deuda tecnica inicial
+- base de datos (MySQL/PostgreSQL, por docker-compose o dependencias)
+- infraestructura (Docker, Nginx, Apache)
+- arquitectura basica: Controllers, Models, Services, Repositories, Policies, Middleware, Jobs, Events, Livewire, Actions, Mail, Notifications, Providers, View Components
+- multi-tenant: si detecta paquetes conocidos (`stancl/tenancy`, `spatie/laravel-multitenancy`, `tenancy/tenancy`, `hyn/multi-tenant`) o estructura tipica (modelo `Tenant`, migraciones separadas, `routes/tenant.php`, `config/tenancy.php`), y si puede determinar la estrategia (por ejemplo, base de datos por tenant)
+- integraciones (Mercado Pago, Stripe, AWS, Cloudflare, SMTP, Redis, RabbitMQ, Elasticsearch, Meilisearch, OpenAI, Firebase)
+- deuda tecnica inicial (marcadores TODO/FIXME/HACK y controllers muy extensos)
 
 Que genera:
 
 - knowledge/project.md
-- knowledge/architecture.md
+- knowledge/architecture.md (incluye la seccion Multi-tenant)
 - knowledge/integrations.md
 - knowledge/technical-debt.md
+
+Nota: la deteccion es heuristica, basada en carpetas y dependencias conocidas. Si tu proyecto usa una convencion de carpetas distinta a las estandar de Laravel (por ejemplo, un modulo propio que no es `app/Services` ni `app/Livewire`), no lo va a reconocer solo; se corrige manualmente en `knowledge/architecture.md` o se agrega el patron al scanner (`cli/core/scanner.py`).
 
 ---
 
@@ -90,6 +113,22 @@ Ejemplos:
 - "Ejecuta workflow New Feature para este requerimiento..."
 - "Ejecuta workflow Maintenance para este ticket..."
 - "Ejecuta workflow Explain Code sobre este modulo..."
+
+---
+
+## Preguntas frecuentes
+
+## No me genero AGENTS.md despues de bootstrap
+
+Correcto: `bootstrap` nunca crea `AGENTS.md`. Corre `install` sobre el mismo proyecto (no rompe lo que ya tenes en `knowledge/` o `memory/`).
+
+## Bootstrap no detecta todo lo que tengo en app/
+
+Revisa si esas carpetas tienen nombres estandar (Controllers, Models, Services, Repositories, Policies, Middleware, Jobs, Events, Livewire, Actions, Mail, Notifications, Providers, View Components). Si tu carpeta no matchea ninguno de esos patrones, hoy no se detecta sola. Se puede sumar el patron nuevo en `ARCHITECTURE_DIR_PATTERNS` de `cli/core/scanner.py`.
+
+## Mi proyecto es multi-tenant, con base por tenant, ¿lo detecta?
+
+Si usas `stancl/tenancy`, `spatie/laravel-multitenancy`, `tenancy/tenancy` o `hyn/multi-tenant`, o tenes la estructura tipica (`app/Models/Tenant.php`, `database/migrations/tenant/`, `routes/tenant.php`, `config/tenancy.php`), `bootstrap` lo marca en `knowledge/architecture.md` junto con la estrategia (por ejemplo, "Base de datos por tenant"). Si usas una libreria propia o una convencion distinta, hoy no se detecta sola.
 
 ---
 
@@ -145,6 +184,7 @@ Elimina:
 - playbooks/
 - checklists/
 - AGENTS.md
+- CLAUDE.md (solo si es el bridge generado por Cadierno, `@AGENTS.md` sin cambios; si le agregaste contenido propio, se conserva)
 
 Con purge total:
 
@@ -261,6 +301,7 @@ Es conocimiento tecnico reutilizable para un tema concreto.
 Ejemplos:
 
 - playbooks/laravel/service-layer.md
+- playbooks/laravel/multitenancy.md
 - playbooks/mysql/indexes.md
 - playbooks/git/release.md
 - playbooks/mercadopago/refunds.md
@@ -291,7 +332,7 @@ Si knowledge esta bien, las respuestas mejoran mucho.
 
 1. install
 2. bootstrap
-3. revisar knowledge/project.md
+3. revisar knowledge/project.md y knowledge/architecture.md (incluida la seccion Multi-tenant)
 4. corregir manualmente objetivo/dominio si hace falta
 
 ---
@@ -361,6 +402,14 @@ Prompt sugerido:
 Prompt sugerido:
 
 "Usa workflow Explain Code sobre este controlador. Explica flujo feliz, errores, side effects y riesgos."
+
+---
+
+## Caso 5: proyecto multi-tenant
+
+Prompt sugerido:
+
+"Este proyecto usa stancl/tenancy con base de datos por tenant. Antes de tocar codigo, confirmame si el cambio afecta la conexion central o la de tenant, y si hace falta correr migraciones en `database/migrations/tenant`."
 
 ---
 
@@ -445,10 +494,11 @@ Prompt base:
 ## Errores comunes y como evitarlos
 
 1. Pedir codigo sin bootstrap previo.
-2. No leer knowledge antes de implementar.
-3. Mezclar varios cambios grandes en una sola tarea.
-4. No validar regresiones.
-5. No actualizar technical-debt.md cuando descubris riesgos.
+2. Asumir que bootstrap instala el framework completo (eso lo hace install).
+3. No leer knowledge antes de implementar.
+4. Mezclar varios cambios grandes en una sola tarea.
+5. No validar regresiones.
+6. No actualizar technical-debt.md cuando descubris riesgos.
 
 ---
 

@@ -88,11 +88,22 @@ def _render_architecture_markdown(project) -> str:
     if not components:
         components = "- No detectados"
 
+    tenancy_evidence = "\n".join(f"- {item}" for item in project.multitenancy_evidence)
+    if not tenancy_evidence:
+        tenancy_evidence = "- Sin evidencia"
+
     return f"""# Arquitectura
 
 ## Tipo de arquitectura
 
 - Aplicación monolítica (estimada por estructura de carpetas).
+
+## Multi-tenant
+
+- Estado: {project.multitenancy}
+- Estrategia: {project.multitenancy_strategy}
+- Evidencia:
+{tenancy_evidence}
 
 ## Estructura de carpetas
 
@@ -137,6 +148,30 @@ def _render_architecture_markdown(project) -> str:
 ## Events
 
 {('- Events detectados' if 'Events' in project.architecture_components else '- No detectado')}
+
+## Livewire
+
+{('- Componentes Livewire detectados' if 'Livewire' in project.architecture_components else '- No detectado')}
+
+## Actions
+
+{('- Actions detectadas' if 'Actions' in project.architecture_components else '- No detectado')}
+
+## Mail
+
+{('- Mailables detectados' if 'Mail' in project.architecture_components else '- No detectado')}
+
+## Notifications
+
+{('- Notifications detectadas' if 'Notifications' in project.architecture_components else '- No detectado')}
+
+## Providers
+
+{('- Service Providers detectados' if 'Providers' in project.architecture_components else '- No detectado')}
+
+## View Components
+
+{('- View Components detectados' if 'View Components' in project.architecture_components else '- No detectado')}
 
 ## Dependencias entre módulos
 
