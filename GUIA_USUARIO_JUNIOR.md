@@ -46,6 +46,18 @@ Cadierno AI funciona como un equipo virtual:
 
 Si usas estas cuatro piezas juntas, la IA trabaja con mucha mas calidad.
 
+## Rutina diaria
+
+1. Describí el requerimiento y elegí el workflow.
+2. Analizá impacto y dividí en microtareas si hay riesgo.
+3. Implementá una microtarea por vez; ejecutá pruebas y guardá evidencia.
+4. Validá invariantes, QA y Code Review.
+5. Emití un cierre explícito y actualizá knowledge si cambió algo relevante.
+
+Checklist de cierre: caso feliz, errores, rollback, concurrencia cuando aplique,
+invariantes, ausencia de estados intermedios, QA, review, evidencia,
+documentación y conclusión aprobada o rechazada.
+
 ---
 
 ## Instalacion y primeros pasos

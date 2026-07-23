@@ -39,6 +39,10 @@ Utilizar cuando el usuario solicite:
 
 ## Flujo
 
+> Para trabajo de riesgo o varios escenarios, seguir el playbook de
+> [Ejecución por Microtareas](../../playbooks/ai-agents/microtask-execution.md).
+> Código escrito no es cierre: cada paso requiere evidencia y auditoría final.
+
 ### 1. Architect
 
 - Comprender el problema.

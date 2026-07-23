@@ -33,6 +33,10 @@ Corregir un error sin introducir regresiones.
 
 ## Flujo
 
+> Si hay transacciones, concurrencia, integraciones o varios escenarios de prueba,
+> usar [Ejecución por Microtareas](../../playbooks/ai-agents/microtask-execution.md):
+> dividir, validar cada paso, recopilar evidencia y auditar antes del cierre.
+
 ### 1. QA
 
 - Reproducir.

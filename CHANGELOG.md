@@ -12,6 +12,8 @@
 	- `install/install_cli.ps1` (Windows)
 - Documentacion de instalacion y quickstart actualizada.
 - Limpieza de artefactos Python cache (`__pycache__`, `.pyc`) del repositorio.
+- Playbook de ejecución por microtareas, cierre basado en evidencia e invariantes,
+  mejoras de workflows y guía junior; documentación V2.2 corregida.
 
 ## v2.1.0
 

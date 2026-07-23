@@ -91,6 +91,9 @@ Esperar aprobación cuando el cambio sea significativo.
 
 # Paso 6 - Implementar
 
+Si hay riesgo, transacciones, integraciones o escenarios múltiples, dividir en
+microtareas y seguir `playbooks/ai-agents/microtask-execution.md`.
+
 Delegar al Specialist correspondiente.
 
 Respetar:

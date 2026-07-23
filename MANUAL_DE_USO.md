@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Este manual explica como usar Cadierno AI en su version V2.1 para trabajo diario real en proyectos existentes sin cambiar arquitectura innecesariamente.
+Este manual explica como usar Cadierno AI V2.2 para trabajo diario real en proyectos existentes sin cambiar arquitectura innecesariamente.
 
 Cadierno AI en V2.1 se centra en cerrar este flujo:
 
@@ -12,7 +12,7 @@ Cadierno AI en V2.1 se centra en cerrar este flujo:
 
 ---
 
-## Alcance de V2.1
+## Alcance de V2.2
 
 Estado de comandos CLI:
 
@@ -115,7 +115,7 @@ Y genera:
 
 ---
 
-## Memoria persistente (V2.1)
+## Memoria persistente (V2.2)
 
 Cadierno AI guarda memoria en dos niveles:
 
@@ -199,17 +199,18 @@ Caso: salida inesperada en bootstrap.
 
 ---
 
-## Estado de cierre V2.1
+## Estado de cierre V2.2
 
-Cadierno AI esta en estado utilizable para V2.1 si tu objetivo es:
+Cadierno AI V2.2 es la versión estable actual para:
 
 - instalar metodologia en un proyecto existente;
 - detectar stack base y generar knowledge;
 - persistir perfil/estilo/historial en uso diario.
 
-Mem0 no es obligatorio para V2.1.
-
-Es opcional para V2.2 cuando quieras memoria externalizada y aprendizaje cross-device.
+La memoria usa SQLite con ámbitos de usuario y workspace; `memory save`,
+`memory search`, `memory context`, `cadierno assist` y el servidor MCP-like
+local por stdio JSON-RPC están disponibles. Mem0 no es necesario para V2.2;
+integraciones avanzadas quedan para V3.
 
 ---
 
