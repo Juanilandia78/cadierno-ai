@@ -85,7 +85,28 @@ No necesitas instalar SQLite por separado para la memoria local.
 Archivos que crea automaticamente:
 
 - `~/.cadierno-ai/brain.db` (memoria de usuario)
-- `/ruta/proyecto/memory/.cadierno/brain.db` (memoria de workspace)
+- `/ruta/proyecto/memory/.cadierno/brain.db` (memoria de workspace, por-proyecto)
+
+## PyYAML: hace falta para el soporte de workspace de infraestructura?
+
+Es **opcional**. `cadierno bootstrap` puede detectar un workspace de
+infraestructura compartida (docker-compose, servicios hermanos, nginx) cuando
+el proyecto vive dentro de una carpeta mayor. Para leer el `docker-compose.yml`
+en detalle (servicios, redes, volúmenes, puertos, healthchecks) Cadierno usa
+PyYAML si está disponible.
+
+- Con PyYAML instalado: detección completa y estructurada.
+- Sin PyYAML: Cadierno sigue funcionando, con una detección heurística más
+  limitada (nombres de servicio por indentación, sin el resto del detalle).
+  El propio `knowledge/infrastructure.md` generado indica qué modo se usó.
+
+Los instaladores (`install_cli.sh`/`.ps1`) intentan instalar PyYAML de forma
+no obligatoria; si falla (por ejemplo, sin conexión), Cadierno igual funciona.
+Instalación manual si la necesitás:
+
+```bash
+./.venv/bin/pip install pyyaml
+```
 
 ## Actualizacion
 

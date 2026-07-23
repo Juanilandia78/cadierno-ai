@@ -80,7 +80,9 @@ Que hace:
 - crea AGENTS.md
 - crea CLAUDE.md (solo una linea: `@AGENTS.md`)
 
-Importante: **`AGENTS.md`, `.ai/`, `playbooks/` y `checklists/` los crea `install`, no `bootstrap`.** Si corres `bootstrap` sobre un proyecto donde nunca corriste `install`, vas a terminar con `knowledge/` y `memory/` pero sin `AGENTS.md` ni `.ai/`. Son dos pasos independientes a proposito: `install` monta el framework (roles, playbooks, checklists), `bootstrap` analiza el codigo. Si ya tenes `knowledge/` porque corriste `bootstrap` solo, podes correr `install` despues sin perder nada (no pisa archivos existentes).
+Importante: **`.ai/`, `playbooks/` y `checklists/` los crea `install`, no `bootstrap`.** Si corres `bootstrap` sobre un proyecto donde nunca corriste `install`, vas a terminar con `knowledge/` y `memory/` pero sin `.ai/`, `playbooks/` ni `checklists/`. Son dos pasos independientes a proposito: `install` monta el framework (roles, playbooks, checklists), `bootstrap` analiza el codigo. Si ya tenes `knowledge/` porque corriste `bootstrap` solo, podes correr `install` despues sin perder nada (no pisa archivos existentes).
+
+Sobre `AGENTS.md` puntualmente: `install` es quien lo crea por primera vez (a partir de la plantilla). `bootstrap` no genera el archivo completo, pero sí actualiza una sección puntual y delimitada (`## Cadierno / Workspace`, entre marcas `<!-- cadierno:managed:... -->`) con el proyecto detectado y, si corresponde, el workspace de infraestructura compartida. El resto del archivo (los demas encabezados y cualquier nota manual tuya) `bootstrap` nunca lo toca. Si corres `bootstrap` sin haber corrido `install` antes, vas a terminar con un `AGENTS.md` minimo que solo tiene esa seccion — segui recomendando correr `install` primero para tener el archivo completo.
 
 Sobre `CLAUDE.md`: Claude Code (el agente con el que estas hablando ahora mismo) no lee `AGENTS.md` solo, unicamente lee `CLAUDE.md` al arrancar sesion. Por eso `install` te crea un `CLAUDE.md` con la linea `@AGENTS.md`, que es la sintaxis de import de Claude Code: hace que todo el contenido de `AGENTS.md` (y por lo tanto, indirectamente, la filosofia y el contexto de Cadierno) se cargue solo en cada sesion, sin que tengas que pedirlo vos cada vez. Si ya tenias un `CLAUDE.md` propio con contenido distinto, `install`/`update` no lo pisan: te avisan para que agregues la linea `@AGENTS.md` a mano.
 
@@ -130,9 +132,9 @@ Ejemplos:
 
 ## Preguntas frecuentes
 
-## No me genero AGENTS.md despues de bootstrap
+## No me genero un AGENTS.md completo despues de bootstrap
 
-Correcto: `bootstrap` nunca crea `AGENTS.md`. Corre `install` sobre el mismo proyecto (no rompe lo que ya tenes en `knowledge/` o `memory/`).
+Esperable: `bootstrap` solo escribe/actualiza la sección `## Cadierno / Workspace` de `AGENTS.md` (o crea un `AGENTS.md` minimo con solo esa sección, si el archivo no existia). No genera el resto de los encabezados (Framework, Backend, Convenciones, etc.). Corre `install` sobre el mismo proyecto para tener el archivo completo (no rompe lo que ya tenes en `knowledge/` o `memory/`, ni la sección que ya escribio `bootstrap`).
 
 ## Bootstrap no detecta todo lo que tengo en app/
 
@@ -163,6 +165,13 @@ Analiza proyecto y genera archivos de conocimiento.
 ```bash
 python cadierno.py bootstrap /ruta/proyecto
 ```
+
+Si el proyecto vive dentro de una carpeta mayor con `docker-compose.yml` y
+otros servicios (un monorepo), `bootstrap` intenta detectar ese workspace
+automaticamente y agrega `knowledge/workspace.md` + `knowledge/infrastructure.md`.
+Es opcional: `--infra-root`/`--monorepo-root <ruta>` para indicarlo a mano,
+`--no-workspace` para forzar el analisis como proyecto simple. Ver
+GUIA_COMANDOS_CLI.md para el detalle.
 
 ---
 

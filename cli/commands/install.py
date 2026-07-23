@@ -1,7 +1,21 @@
 from pathlib import Path
+import hashlib
 import shutil
 
-from core.memory import add_history_event, initialize_memory
+from core.memory import add_history_event, initialize_memory, set_generated_hash
+
+
+# knowledge/*.md que bootstrap regenera y rastrea por hash (ver commands/bootstrap.py).
+# Se registran acá para que la primera corrida de "bootstrap" después de "install"
+# no confunda el stub estático de instalación con una edición manual del usuario.
+BOOTSTRAP_MANAGED_KNOWLEDGE_FILES = {
+    "project.md",
+    "architecture.md",
+    "integrations.md",
+    "technical-debt.md",
+    "workspace.md",
+    "infrastructure.md",
+}
 
 
 def copy_directory(source: Path, destination: Path):
@@ -31,19 +45,20 @@ def create_directory(path: Path):
         print(f"✔ Creado: {path.name}")
 
 
-def create_file(path: Path, content: str):
+def create_file(path: Path, content: str) -> bool:
     """
-    Crea un archivo únicamente si no existe.
+    Crea un archivo únicamente si no existe. Devuelve True si lo escribió.
     """
 
     if path.exists():
-        return
+        return False
 
     path.write_text(content, encoding="utf-8")
     print(f"✔ Archivo: {path.name}")
+    return True
 
 
-def install(path: str):
+def install(path: str, infra_root: str | None = None, no_workspace: bool = False):
 
     project = Path(path).resolve()
 
@@ -92,13 +107,22 @@ def install(path: str):
 
     knowledge = project / "knowledge"
 
-    create_file(
-        knowledge / "project.md",
+    def create_tracked_knowledge_file(relative_name: str, content: str) -> None:
+        written = create_file(knowledge / relative_name, content)
+        if written and relative_name in BOOTSTRAP_MANAGED_KNOWLEDGE_FILES:
+            # El stub recién escrito es contenido conocido de Cadierno, no una
+            # edición manual: se registra para que "bootstrap" pueda
+            # sobreescribirlo con seguridad en su primera corrida.
+            content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            set_generated_hash(project, f"knowledge/{relative_name}", content_hash)
+
+    create_tracked_knowledge_file(
+        "project.md",
         "# Proyecto\n\nInformación general del proyecto.\n"
     )
 
-    create_file(
-        knowledge / "architecture.md",
+    create_tracked_knowledge_file(
+        "architecture.md",
         "# Arquitectura\n\nArquitectura detectada automáticamente.\n"
     )
 
@@ -107,14 +131,26 @@ def install(path: str):
         "# Decisiones Técnicas\n\nConvenciones detectadas.\n"
     )
 
-    create_file(
-        knowledge / "integrations.md",
+    create_tracked_knowledge_file(
+        "integrations.md",
         "# Integraciones\n\nServicios externos detectados.\n"
     )
 
-    create_file(
-        knowledge / "technical-debt.md",
+    create_tracked_knowledge_file(
+        "technical-debt.md",
         "# Deuda Técnica\n\nPendientes encontrados durante el análisis.\n"
+    )
+
+    create_tracked_knowledge_file(
+        "workspace.md",
+        "# Workspace\n\nInformación del workspace de infraestructura compartida "
+        "(docker-compose, servicios hermanos, etc.). Se completa con `cadierno bootstrap`.\n"
+    )
+
+    create_tracked_knowledge_file(
+        "infrastructure.md",
+        "# Infraestructura del Workspace\n\nDetalle técnico de servicios, redes, volúmenes "
+        "y reverse proxy del workspace compartido. Se completa con `cadierno bootstrap`.\n"
     )
 
     memory = project / "memory"
@@ -178,6 +214,11 @@ def install(path: str):
         else:
 
             print("⚠ Ya existe CLAUDE.md sin referenciar AGENTS.md: agregá la línea '@AGENTS.md' manualmente para que Claude Code cargue el contexto de Cadierno AI")
+
+    if infra_root or no_workspace:
+        print()
+        print("• La detección de workspace/infraestructura compartida se ejecuta con 'cadierno bootstrap',")
+        print("  no con 'install'. Volvé a pasar --infra-root/--monorepo-root o --no-workspace en ese comando.")
 
     print()
     print("===================================")

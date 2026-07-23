@@ -77,15 +77,30 @@ Incluye:
 
 Plantillas utilizadas para generar automáticamente la documentación de cada proyecto.
 
-Bootstrap utiliza estos templates para crear:
+`bootstrap` genera o actualiza, en `knowledge/` del proyecto:
 
-- knowledge/project.md
-- knowledge/architecture.md
-- knowledge/decisions.md
-- knowledge/patterns.md
-- knowledge/integrations.md
-- knowledge/technical-debt.md
-- knowledge/developer.md
+- `project.md`, `architecture.md`, `integrations.md`, `technical-debt.md`: contexto
+  local de ESE proyecto (siempre se generan).
+- `workspace.md`, `infrastructure.md`: contexto GLOBAL del workspace de
+  infraestructura compartida (docker-compose, servicios hermanos, nginx),
+  solo cuando `bootstrap` detecta o recibe uno — ver GUIA_COMANDOS_CLI.md.
+
+`install` además crea `decisions.md` como stub editable a mano (convenciones y
+decisiones del equipo); `bootstrap` nunca lo sobreescribe.
+
+---
+
+## Workspace (infraestructura compartida)
+
+Cuando un proyecto vive dentro de una carpeta mayor con `docker-compose.yml`,
+otros servicios y/o un reverse proxy (Nginx), `bootstrap` puede detectar esa
+infraestructura compartida —de forma automática o indicándola explícitamente
+con `--infra-root`/`--monorepo-root`— sin dejar de analizar el proyecto en sí.
+Es opcional: un proyecto aislado sigue funcionando exactamente igual que
+siempre. Ver la sección correspondiente en GUIA_COMANDOS_CLI.md.
+
+> No confundir con `memory --scope workspace`: ese es un concepto distinto,
+> la memoria persistente por-proyecto (ver sección "Memory" más abajo).
 
 ---
 
@@ -140,6 +155,11 @@ Actualmente:
 Nota estado actual:
 
 - V2.2 ya incluye memoria persistente en SQLite, comandos `memory` y servidor MCP-like local.
+- V2.3 agrega soporte de workspace de **infraestructura compartida** (docker-compose,
+  servicios hermanos, nginx) para proyectos dentro de un monorepo — ver `bootstrap
+  --infra-root`. El ítem "Workspace" listado en V2 se refería originalmente a este
+  tipo de soporte de forma genérica; el de memoria persistente por-proyecto
+  (`memory --scope workspace`) es un concepto no relacionado, ya cubierto desde V2.1/V2.2.
 - V3 queda orientado a integraciones avanzadas y automatizacion ampliada.
 
 ---

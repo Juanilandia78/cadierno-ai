@@ -1,4 +1,4 @@
-def doctor():
+def doctor(version: str = "desconocida"):
 
     print("\nCadierno Doctor\n")
 
@@ -8,5 +8,5 @@ def doctor():
     print("Playbooks........... OK")
     print("Specialists......... OK")
     print("Memory.............. OK")
-    print("Version............. 0.2.2")
+    print(f"Version............. {version}")
     print("-----------------------------")

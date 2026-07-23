@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import os
 
+from core.env_scan import extract_env_var_names
 from core.project import Project
 
 
@@ -34,7 +35,6 @@ TEXT_FILE_EXTENSIONS = {
     ".json",
     ".yml",
     ".yaml",
-    ".env",
     ".js",
     ".ts",
 }
@@ -191,6 +191,17 @@ DB_PER_TENANT_CONFIG_MARKERS = [
     "central_connection",
     "tenantdatabasemanager",
 ]
+
+
+def _is_env_file(filename: str) -> bool:
+    """
+    Detecta archivos estilo dotenv (.env, .env.local, .env.testing, algo.env, ...)
+    para excluirlos siempre de cualquier volcado de contenido crudo. Solo se
+    permite extraer nombres de variables (ver core/env_scan.py), nunca valores.
+    """
+
+    lowered = filename.lower()
+    return lowered == ".env" or lowered.startswith(".env.") or lowered.endswith(".env")
 
 
 def _safe_load_json(path: Path) -> dict:
@@ -446,7 +457,14 @@ def _collect_searchable_text(root: Path) -> str:
             for filename in files:
                 full_path = Path(current_root) / filename
 
-                if full_path.suffix.lower() not in TEXT_FILE_EXTENSIONS and filename != ".env":
+                if _is_env_file(filename):
+                    # Nunca se vuelca contenido crudo de un .env: solo nombres de variable.
+                    var_names = extract_env_var_names(full_path)
+                    if var_names:
+                        chunks.append("\n".join(var_names).lower())
+                    continue
+
+                if full_path.suffix.lower() not in TEXT_FILE_EXTENSIONS:
                     continue
 
                 try:
@@ -493,6 +511,11 @@ def _collect_technical_debt(root: Path) -> list[str]:
 
         for filename in files:
             full_path = Path(current_root) / filename
+
+            if _is_env_file(filename):
+                # Los .env nunca se leen línea a línea acá: evita filtrar valores
+                # sensibles como snippet de deuda técnica.
+                continue
 
             if full_path.suffix.lower() not in TEXT_FILE_EXTENSIONS:
                 continue

@@ -27,6 +27,12 @@ fi
 echo "==> Actualizando pip/setuptools/wheel"
 "${VENV_DIR}/bin/python" -m pip install --upgrade pip setuptools wheel
 
+echo "==> Instalando PyYAML (opcional, detección detallada de docker-compose en workspaces)"
+if ! "${VENV_DIR}/bin/python" -m pip install pyyaml; then
+  echo "AVISO: no se pudo instalar PyYAML (por ejemplo, sin conexión). Cadierno sigue"
+  echo "funcionando igual; la detección de workspace usa un modo heurístico más limitado."
+fi
+
 echo "==> Verificando instalacion de Cadierno"
 "${VENV_DIR}/bin/python" "${ROOT_DIR}/cli/cadierno.py" --version
 "${VENV_DIR}/bin/python" "${ROOT_DIR}/cli/cadierno.py" doctor

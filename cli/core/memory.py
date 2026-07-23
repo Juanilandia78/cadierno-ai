@@ -246,6 +246,56 @@ def mark_workspace_event(project_path: Path, event_name: str) -> None:
         conn.close()
 
 
+def set_infra_workspace_metadata(project_path: Path, root: str | None, method: str) -> None:
+    """
+    Guarda la última detección de workspace de infraestructura (docker-compose,
+    monorepo, etc.) para este proyecto. No confundir con el scope de memoria
+    "workspace" (que es memoria persistente por-proyecto): esto es información
+    sobre la carpeta raíz de infraestructura compartida detectada por bootstrap,
+    ver cli/core/workspace.py.
+    """
+
+    ensure_workspace_memory(project_path)
+    conn = _connect(_workspace_db_path(project_path))
+    try:
+        metadata = _kv_get(conn, "workspace", "metadata", {})
+        metadata["infra_workspace_root"] = root or ""
+        metadata["infra_workspace_detection_method"] = method
+        metadata["infra_workspace_last_bootstrap_at"] = _now_iso()
+        metadata["updated_at"] = _now_iso()
+        _kv_set(conn, "workspace", "metadata", metadata)
+    finally:
+        conn.close()
+
+
+def get_generated_hash(project_path: Path, relative_file: str) -> str | None:
+    """
+    Devuelve el hash del contenido que Cadierno generó por última vez para
+    `relative_file`, o None si nunca se registró. Se usa para no sobreescribir
+    archivos de knowledge/ editados a mano (ver cli/commands/bootstrap.py).
+    """
+
+    ensure_workspace_memory(project_path)
+    conn = _connect(_workspace_db_path(project_path))
+    try:
+        hashes = _kv_get(conn, "workspace", "generated_hashes", {})
+        return hashes.get(relative_file)
+    finally:
+        conn.close()
+
+
+def set_generated_hash(project_path: Path, relative_file: str, content_hash: str) -> None:
+
+    ensure_workspace_memory(project_path)
+    conn = _connect(_workspace_db_path(project_path))
+    try:
+        hashes = _kv_get(conn, "workspace", "generated_hashes", {})
+        hashes[relative_file] = content_hash
+        _kv_set(conn, "workspace", "generated_hashes", hashes)
+    finally:
+        conn.close()
+
+
 def get_effective_style(project_path: Path) -> str:
 
     ensure_user_memory()

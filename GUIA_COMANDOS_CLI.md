@@ -36,6 +36,49 @@ los archivos de `knowledge/`.
 python3 cadierno.py bootstrap /ruta/proyecto
 ```
 
+#### Proyectos dentro de un workspace de infraestructura compartida
+
+> **Importante:** este "workspace" (docker-compose, servicios hermanos, nginx,
+> redes) no tiene relación con el `--scope workspace` de `memory` (que es la
+> memoria persistente por-proyecto, ver más abajo). Son dos conceptos
+> distintos que comparten nombre por casualidad histórica.
+
+Si tu proyecto vive dentro de una carpeta mayor con `docker-compose.yml`,
+otros servicios y/o `nginx/` (por ejemplo `workspace/mi-proyecto/`), `bootstrap`
+puede detectar esa infraestructura compartida además de tu proyecto:
+
+```bash
+# Detección automática: busca hacia arriba docker-compose.yml/compose.yml
+# (o sus variantes .yaml) hasta encontrar evidencia fuerte, sin cruzar $HOME,
+# la raíz del filesystem, ni un repo git ajeno.
+python3 cadierno.py bootstrap /ruta/workspace/mi-proyecto
+
+# Workspace explícito (--infra-root y --monorepo-root son alias del mismo flag)
+python3 cadierno.py bootstrap /ruta/workspace/mi-proyecto --infra-root /ruta/workspace
+python3 cadierno.py bootstrap /ruta/workspace/mi-proyecto --monorepo-root /ruta/workspace
+
+# Forzar análisis como proyecto simple, aunque exista un workspace detectable
+python3 cadierno.py bootstrap /ruta/workspace/mi-proyecto --no-workspace
+```
+
+Si no se detecta ningún workspace válido, `bootstrap` sigue funcionando
+exactamente igual que en un proyecto simple (esto nunca es obligatorio). Cuando
+sí detecta uno, además de los archivos habituales genera:
+
+- `knowledge/workspace.md`: panorama del workspace (raíz detectada, evidencia,
+  proyectos hermanos, qué servicio Docker corresponde a este proyecto).
+- `knowledge/infrastructure.md`: detalle técnico (servicios, redes, volúmenes,
+  puertos, healthchecks, reverse proxy/Nginx, nombres de variables de entorno
+  del workspace — nunca sus valores).
+
+`bootstrap` nunca sobreescribe un archivo de `knowledge/` que hayas editado a
+mano: si detecta una diferencia respecto a lo último que generó, conserva tu
+versión y escribe la propuesta nueva al lado, como `archivo.md.cadierno-new`,
+para que la fusiones manualmente. Lo mismo aplica a la sección `## Cadierno /
+Workspace` de `AGENTS.md`: solo se actualiza el contenido entre las marcas
+`<!-- cadierno:managed:start/end:workspace -->`; cualquier otra parte del
+archivo (incluidas tus propias notas) queda intacta.
+
 ### `doctor`
 
 Diagnostica la instalación local de Cadierno AI.

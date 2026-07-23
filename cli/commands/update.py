@@ -5,6 +5,9 @@ import shutil
 from core.memory import add_history_event, initialize_memory, mark_workspace_event
 
 
+_MANAGED_SECTION_MARKER = "<!-- cadierno:managed:start:"
+
+
 SYNC_DIRECTORIES = [
     ".ai",
     "playbooks",
@@ -62,7 +65,7 @@ def _safe_copy_file(source: Path, destination: Path) -> str:
     return "skipped"
 
 
-def update(path: str):
+def update(path: str, infra_root: str | None = None, no_workspace: bool = False):
 
     project = Path(path).resolve()
     framework = Path(__file__).resolve().parent.parent.parent
@@ -113,7 +116,11 @@ def update(path: str):
             print("• AGENTS.md sin cambios")
             total_unchanged += 1
         else:
-            print("⚠ AGENTS.md personalizado: se conserva archivo local")
+            existing = target_agents.read_text(encoding="utf-8", errors="ignore") if target_agents.exists() else ""
+            if _MANAGED_SECTION_MARKER in existing:
+                print("• AGENTS.md contiene secciones gestionadas (bootstrap): se conserva sin tocar")
+            else:
+                print("⚠ AGENTS.md personalizado: se conserva archivo local")
             total_skipped += 1
     else:
         print("⚠ No se encontró templates/AGENTS.template.md")
@@ -149,5 +156,10 @@ def update(path: str):
         "update",
         f"copied={total_copied} unchanged={total_unchanged} skipped={total_skipped}",
     )
+
+    if infra_root or no_workspace:
+        print()
+        print("• La detección de workspace/infraestructura compartida se ejecuta con 'cadierno bootstrap',")
+        print("  no con 'update'. Volvé a pasar --infra-root/--monorepo-root o --no-workspace en ese comando.")
 
     print("\nUpdate finalizado (modo seguro).")

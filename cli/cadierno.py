@@ -21,7 +21,33 @@ from commands.memory import (
     supervisor,
 )
 
-VERSION = "0.2.2"
+VERSION = "0.3.0"
+
+
+def _add_workspace_arguments(subparser):
+    """
+    Agrega las opciones de workspace/infraestructura compartida a un subcomando.
+
+    --infra-root / --monorepo-root son alias del mismo flag: apuntan a la
+    carpeta raíz que contiene la infraestructura compartida (docker-compose,
+    nginx, otros servicios). No confundir con `memory --scope workspace`, que
+    es la memoria persistente por-proyecto (concepto no relacionado).
+    """
+
+    subparser.add_argument(
+        "--infra-root",
+        "--monorepo-root",
+        dest="infra_root",
+        default=None,
+        help="Ruta a la raíz de infraestructura/monorepo compartida (docker-compose, servicios hermanos, etc.)"
+    )
+
+    subparser.add_argument(
+        "--no-workspace",
+        dest="no_workspace",
+        action="store_true",
+        help="Fuerza el análisis como proyecto simple, sin detectar ni usar infraestructura compartida"
+    )
 
 
 def main():
@@ -50,6 +76,7 @@ def main():
         default=".",
         help="Ruta del proyecto"
     )
+    _add_workspace_arguments(install_parser)
 
     # bootstrap
     bootstrap_parser = sub.add_parser(
@@ -63,6 +90,7 @@ def main():
         default=".",
         help="Ruta del proyecto"
     )
+    _add_workspace_arguments(bootstrap_parser)
 
     # doctor
     sub.add_parser(
@@ -82,6 +110,7 @@ def main():
         default=".",
         help="Ruta del proyecto"
     )
+    _add_workspace_arguments(update_parser)
 
     # finish
     finish_parser = sub.add_parser(
@@ -254,16 +283,16 @@ def main():
     args = parser.parse_args()
 
     if args.command == "install":
-        install(args.path)
+        install(args.path, infra_root=args.infra_root, no_workspace=args.no_workspace)
 
     elif args.command == "bootstrap":
-        bootstrap(args.path)
+        bootstrap(args.path, infra_root=args.infra_root, no_workspace=args.no_workspace)
 
     elif args.command == "doctor":
-        doctor()
+        doctor(VERSION)
 
     elif args.command == "update":
-        update(args.path)
+        update(args.path, infra_root=args.infra_root, no_workspace=args.no_workspace)
 
     elif args.command == "finish":
         finish(args.path, push=args.push, branch_name=args.branch, tag_name=args.tag)

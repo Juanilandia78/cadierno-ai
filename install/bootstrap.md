@@ -229,3 +229,39 @@ Cadierno AI ya comprende el proyecto.
 Todos los Workflows pueden comenzar a trabajar utilizando el conocimiento generado.
 
 Nunca asumir información que no haya sido detectada automáticamente.
+
+---
+
+# Addendum - Workspace de infraestructura compartida (opcional)
+
+Cuando el proyecto vive dentro de una carpeta mayor con infraestructura
+compartida (docker-compose, servicios hermanos, nginx), Bootstrap intenta
+detectar esa infraestructura ademas del proyecto en si. Es opcional: nunca
+obligatorio, y un proyecto aislado sigue funcionando exactamente igual.
+
+Buscar hacia arriba, desde la carpeta del proyecto, evidencia fuerte:
+
+- docker-compose.yml / docker-compose.yaml
+- compose.yml / compose.yaml
+
+Nunca cruzar `$HOME`, la raiz del filesystem, ni un repositorio git ajeno al
+del proyecto. No asumir que cualquier carpeta superior es el workspace.
+
+Si se detecta:
+
+- identificar servicios, redes, volumenes, puertos, healthchecks;
+- identificar que servicio Docker corresponde a este proyecto (nunca adivinar
+  si no hay evidencia clara: build.context o bind-mount);
+- identificar reverse proxy / Nginx si existe;
+- identificar otros proyectos hermanos dentro del workspace;
+- registrar solo NOMBRES de variables de entorno del workspace, nunca valores.
+
+Guardar en:
+
+- knowledge/workspace.md (panorama del workspace, contexto GLOBAL)
+- knowledge/infrastructure.md (detalle tecnico de servicios/redes/volumenes)
+
+Nunca mezclar las convenciones de otros servicios del workspace con las de
+este proyecto puntual (esas quedan en knowledge/decisions.md).
+
+Si no se detecta ningun workspace valido, continuar como proyecto simple.

@@ -29,6 +29,14 @@ if (-not $NoVenv) {
     Write-Host "==> Actualizando pip/setuptools/wheel"
     & "$venv\Scripts\python.exe" -m pip install --upgrade pip setuptools wheel
 
+    Write-Host "==> Instalando PyYAML (opcional, deteccion detallada de docker-compose en workspaces)"
+    try {
+        & "$venv\Scripts\python.exe" -m pip install pyyaml
+    } catch {
+        Write-Host "AVISO: no se pudo instalar PyYAML. Cadierno sigue funcionando igual;"
+        Write-Host "la deteccion de workspace usa un modo heuristico mas limitado."
+    }
+
     Write-Host "==> Verificando instalacion de Cadierno"
     & "$venv\Scripts\python.exe" "$root\cli\cadierno.py" --version
     & "$venv\Scripts\python.exe" "$root\cli\cadierno.py" doctor
@@ -41,6 +49,14 @@ if (-not $NoVenv) {
 } else {
     Write-Host "==> Instalacion sin venv (NoVenv)"
     Invoke-Expression "$python -m pip install --upgrade pip setuptools wheel"
+
+    Write-Host "==> Instalando PyYAML (opcional, deteccion detallada de docker-compose en workspaces)"
+    try {
+        Invoke-Expression "$python -m pip install pyyaml"
+    } catch {
+        Write-Host "AVISO: no se pudo instalar PyYAML. Cadierno sigue funcionando igual;"
+        Write-Host "la deteccion de workspace usa un modo heuristico mas limitado."
+    }
 
     Write-Host "==> Verificando instalacion de Cadierno"
     Invoke-Expression "$python `"$root\cli\cadierno.py`" --version"
