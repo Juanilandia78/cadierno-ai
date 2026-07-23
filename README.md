@@ -1,5 +1,7 @@
 # Cadierno AI
 
+Documentación de comandos: [GUIA_COMANDOS_CLI.md](GUIA_COMANDOS_CLI.md).
+
 > **Pensá. Diseñá. Construí. Revisá. Evolucioná.**
 
 Cadierno AI es un framework de Ingeniería de Software Asistida por Inteligencia Artificial.
