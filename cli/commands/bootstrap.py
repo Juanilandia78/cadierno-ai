@@ -2,6 +2,7 @@ from pathlib import Path
 import hashlib
 
 from core.compose import ComposeService
+from core.gitignore import ensure_gitignore_entries
 from core.managed_sections import upsert_managed_section
 from core.memory import (
     add_history_event,
@@ -594,6 +595,12 @@ def bootstrap(path: str, infra_root: str | None = None, no_workspace: bool = Fal
         _write_knowledge_file(project_path, knowledge_dir, relative_name, content)
 
     _update_agents_workspace_section(project_path, project, detection, workspace_info)
+
+    gitignore_result = ensure_gitignore_entries(project_path)
+    if gitignore_result == "created":
+        print("✔ .gitignore creado (ignora lo instalado por Cadierno)")
+    elif gitignore_result == "updated":
+        print("✔ .gitignore actualizado (ignora lo instalado por Cadierno)")
 
     set_infra_workspace_metadata(project_path, str(detection.root) if detection.root else None, detection.method)
     mark_workspace_event(project_path, "bootstrap")

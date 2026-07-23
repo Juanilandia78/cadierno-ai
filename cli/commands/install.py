@@ -2,6 +2,7 @@ from pathlib import Path
 import hashlib
 import shutil
 
+from core.gitignore import ensure_gitignore_entries
 from core.memory import add_history_event, initialize_memory, set_generated_hash
 
 
@@ -214,6 +215,14 @@ def install(path: str, infra_root: str | None = None, no_workspace: bool = False
         else:
 
             print("⚠ Ya existe CLAUDE.md sin referenciar AGENTS.md: agregá la línea '@AGENTS.md' manualmente para que Claude Code cargue el contexto de Cadierno AI")
+
+    gitignore_result = ensure_gitignore_entries(project)
+    if gitignore_result == "created":
+        print("✔ Archivo: .gitignore (ignora lo instalado por Cadierno)")
+    elif gitignore_result == "updated":
+        print("✔ .gitignore actualizado (ignora lo instalado por Cadierno)")
+    else:
+        print("• .gitignore ya ignora lo instalado por Cadierno")
 
     if infra_root or no_workspace:
         print()

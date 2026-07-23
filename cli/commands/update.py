@@ -2,6 +2,7 @@ from pathlib import Path
 import hashlib
 import shutil
 
+from core.gitignore import ensure_gitignore_entries
 from core.memory import add_history_event, initialize_memory, mark_workspace_event
 
 
@@ -149,6 +150,14 @@ def update(path: str, infra_root: str | None = None, no_workspace: bool = False)
     print(f"✔ Nuevos archivos copiados: {total_copied}")
     print(f"• Archivos sin cambios: {total_unchanged}")
     print(f"⚠ Archivos locales preservados (conflicto): {total_skipped}")
+
+    gitignore_result = ensure_gitignore_entries(project)
+    if gitignore_result == "created":
+        print("✔ .gitignore creado (ignora lo instalado por Cadierno)")
+    elif gitignore_result == "updated":
+        print("✔ .gitignore actualizado (ignora lo instalado por Cadierno)")
+    else:
+        print("• .gitignore sin cambios")
 
     mark_workspace_event(project, "update")
     add_history_event(
