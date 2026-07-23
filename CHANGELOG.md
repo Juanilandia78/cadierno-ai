@@ -33,6 +33,12 @@
     de variables de entorno, secciones gestionadas, e integración completa de
     `bootstrap` con workspace (incluye regresión del caso real de un compose
     compartido desactualizado respecto al proyecto).
+- `install`, `bootstrap` y `update` ahora gestionan un bloque en el `.gitignore`
+  del proyecto (vía sección gestionada, con comentarios `#`) para que `.ai/`,
+  `playbooks/`, `checklists/`, `knowledge/`, `memory/`, `AGENTS.md` y `CLAUDE.md`
+  nunca terminen commiteados al repo del proyecto — se reinstalan con
+  `cadierno install` + `cadierno bootstrap` en cada checkout que los necesite.
+  No toca ninguna otra regla que el `.gitignore` ya tuviera.
 
 ## v2.2.0
 

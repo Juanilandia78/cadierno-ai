@@ -23,6 +23,11 @@ luego ejecutá `bootstrap` nuevamente.
 Instala `.ai/`, playbooks, checklists, `knowledge/`, `memory/`, `AGENTS.md` y
 `CLAUDE.md` si no existen. No debería pisar archivos locales.
 
+También asegura que el `.gitignore` del proyecto ignore todo eso: nada de lo
+que instala Cadierno debe terminar commiteado al repo del proyecto (si hace
+falta en otro checkout, se reinstala con `install` + `bootstrap`). Usa un
+bloque gestionado, sin tocar ninguna otra regla que el `.gitignore` ya tuviera.
+
 ```bash
 python3 cadierno.py install /ruta/proyecto
 ```
