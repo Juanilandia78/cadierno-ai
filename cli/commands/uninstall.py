@@ -2,6 +2,7 @@ from pathlib import Path
 import shutil
 
 from core.memory import add_history_event
+from utils.path import cadierno_root
 
 
 def _remove_path(path: Path) -> bool:
@@ -50,11 +51,12 @@ def uninstall(path: str, purge: bool = False):
 
     removed = 0
 
+    cadierno = cadierno_root(project)
     base_targets = [
-        project / ".ai",
-        project / "playbooks",
-        project / "checklists",
-        project / "AGENTS.md",
+        cadierno / "ai",
+        cadierno / "playbooks",
+        cadierno / "checklists",
+        cadierno / "AGENTS.md",
     ]
 
     for target in base_targets:
@@ -64,7 +66,7 @@ def uninstall(path: str, purge: bool = False):
         else:
             print(f"• No existe: {target.name}")
 
-    claude_result = _remove_claude_bridge(project / "CLAUDE.md")
+    claude_result = _remove_claude_bridge(cadierno / "CLAUDE.md")
 
     if claude_result == "removed":
         print("✔ Eliminado: CLAUDE.md")
@@ -75,10 +77,7 @@ def uninstall(path: str, purge: bool = False):
         print("• No existe: CLAUDE.md")
 
     if purge:
-        purge_targets = [
-            project / "knowledge",
-            project / "memory",
-        ]
+        purge_targets = [cadierno / "knowledge", cadierno / "memory"]
 
         for target in purge_targets:
             if _remove_path(target):
@@ -87,7 +86,7 @@ def uninstall(path: str, purge: bool = False):
             else:
                 print(f"• No existe: {target.name}")
     else:
-        print("\n• Se conservan knowledge/ y memory/ (usar --purge para eliminarlos).")
+        print("\n• Se conserva .cadierno-ai/knowledge y .cadierno-ai/memory (usar --purge para eliminarlos).")
 
     print("\nResumen:")
     print(f"✔ Elementos eliminados: {removed}")

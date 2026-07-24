@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.3.0 (en desarrollo)
+
+- Stack de proyecto unificado bajo `.cadierno-ai/`.
+- Bridges locales e ignorados por Git para Codex, Claude y Cursor.
+- Índice operativo `.cadierno-ai/context.md`, actualizado por install,
+  bootstrap y update.
+- Catálogo de skills opcionales con sugerencia e instalación confirmada.
+- Aprendizaje supervisado: propuestas y aplicación individual con aprobación
+  humana.
+- Salida de consola mejorada con Rich y `--plain` para CI y logs.
+- Pruebas V3 para contexto y catálogo de skills.
+
 ## v2.2.0
 
 - Memoria persistente migrada a SQLite (usuario + workspace).

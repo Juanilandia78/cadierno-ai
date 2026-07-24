@@ -22,11 +22,7 @@ IGNORED_DIRS = {
     "storage",
     "dist",
     "build",
-    ".ai",
-    "playbooks",
-    "checklists",
-    "knowledge",
-    "memory",
+    ".cadierno-ai",
 }
 
 TEXT_FILE_EXTENSIONS = {
@@ -574,4 +570,3 @@ def scan(path: Path) -> Project:
     )
 
     return project
-    

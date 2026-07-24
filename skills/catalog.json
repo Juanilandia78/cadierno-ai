@@ -1,0 +1,15 @@
+{
+  "skills": [
+    {
+      "id": "context7",
+      "source": "https://github.com/netresearch/context7-skill",
+      "official_source": "https://github.com/netresearch/context7-skill",
+      "skill_path": "skills/context7",
+      "expected_files": ["SKILL.md"],
+      "verification": "git-ls-remote",
+      "purpose": "Documentación técnica actualizada de librerías y frameworks.",
+      "install_mode": "optional",
+      "triggers": ["documentación", "api actual", "librería", "framework", "laravel", "livewire", "vue", "react", "prisma"]
+    }
+  ]
+}

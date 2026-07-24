@@ -1,4 +1,6 @@
 from pathlib import Path
+
+from utils.path import cadierno_root
 from datetime import datetime, timezone
 import json
 import os
@@ -23,7 +25,7 @@ def _workspace_dirname() -> str:
 
 
 def _workspace_memory_root(project_path: Path) -> Path:
-    return project_path / "memory" / _workspace_dirname()
+    return cadierno_root(project_path) / "memory" / _workspace_dirname()
 
 
 def _user_db_path() -> Path:

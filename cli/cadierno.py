@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from pathlib import Path
 
 from commands.install import install
 from commands.bootstrap import bootstrap
@@ -8,6 +9,12 @@ from commands.update import update
 from commands.doctor import doctor
 from commands.finish import finish
 from commands.uninstall import uninstall
+from commands.adapters import enable as enable_adapters
+from core.context import generate_context
+from commands.skills import suggest as suggest_skills, install as install_skill, verify as verify_skills
+from commands.learning import propose as learn_propose
+from commands.learning import apply as learn_apply
+from core.version import VERSION
 from commands.memory import (
     assist,
     memory_context,
@@ -21,9 +28,6 @@ from commands.memory import (
     supervisor,
 )
 
-VERSION = "0.2.2"
-
-
 def main():
     parser = argparse.ArgumentParser(
         prog="cadierno",
@@ -35,6 +39,7 @@ def main():
         action="version",
         version=f"Cadierno AI {VERSION}"
     )
+    parser.add_argument("--plain", action="store_true", help="Salida compatible con CI y logs")
 
     sub = parser.add_subparsers(dest="command")
 
@@ -121,6 +126,39 @@ def main():
         default=".",
         help="Ruta del proyecto"
     )
+
+    adapters_parser = sub.add_parser("adapters", help="Configura bridges locales para asistentes de IA")
+    adapters_sub = adapters_parser.add_subparsers(dest="adapters_command")
+    adapters_enable = adapters_sub.add_parser("enable", help="Habilita adaptadores locales e ignorados por Git")
+    adapters_enable.add_argument("adapters", nargs="+", choices=["codex", "claude", "cursor"])
+    adapters_enable.add_argument("--path", default=".", help="Ruta del proyecto")
+
+    context_parser = sub.add_parser("context", help="Genera el índice operativo local")
+    context_sub = context_parser.add_subparsers(dest="context_command")
+    context_generate = context_sub.add_parser("generate", help="Regenera .cadierno-ai/context.md")
+    context_generate.add_argument("path", nargs="?", default=".")
+
+    skills_parser = sub.add_parser("skills", help="Consulta skills opcionales")
+    skills_sub = skills_parser.add_subparsers(dest="skills_command")
+    skills_suggest = skills_sub.add_parser("suggest", help="Sugiere skills sin instalar nada")
+    skills_suggest.add_argument("task", help="Tarea a analizar")
+    skills_suggest.add_argument("--path", default=".")
+    skills_install = skills_sub.add_parser("install", help="Instala una skill con confirmación")
+    skills_install.add_argument("skill_id")
+    skills_install.add_argument("--path", default=".")
+    skills_install.add_argument("--scope", choices=["project", "global"], default="project")
+    skills_install.add_argument("--yes", action="store_true", help="Confirma instalación de forma no interactiva")
+    skills_verify = skills_sub.add_parser("verify", help="Verifica que el origen remoto coincida con el catálogo oficial")
+    skills_verify.add_argument("skill_id", nargs="?")
+    skills_verify.add_argument("--path", default=".")
+
+    learn_parser = sub.add_parser("learn", help="Aprendizaje supervisado")
+    learn_sub = learn_parser.add_subparsers(dest="learn_command")
+    learn_propose_parser = learn_sub.add_parser("propose", help="Crea borrador sin aplicar cambios")
+    learn_propose_parser.add_argument("path", nargs="?", default=".")
+    learn_apply_parser = learn_sub.add_parser("apply", help="Aplica ítems aprobados de forma interactiva")
+    learn_apply_parser.add_argument("proposal")
+    learn_apply_parser.add_argument("--path", default=".")
 
     uninstall_parser.add_argument(
         "--purge",
@@ -253,6 +291,10 @@ def main():
 
     args = parser.parse_args()
 
+    if args.plain:
+        import os
+        os.environ["CADIERNO_PLAIN"] = "1"
+
     if args.command == "install":
         install(args.path)
 
@@ -270,6 +312,30 @@ def main():
 
     elif args.command == "uninstall":
         uninstall(args.path, args.purge)
+
+    elif args.command == "adapters" and args.adapters_command == "enable":
+        enable_adapters(args.path, args.adapters)
+
+    elif args.command == "context" and args.context_command == "generate":
+        target = generate_context(Path(args.path).resolve())
+        print(f"✔ Contexto generado: {target}")
+
+    elif args.command == "skills" and args.skills_command == "suggest":
+        suggest_skills(args.path, args.task)
+
+    elif args.command == "skills" and args.skills_command == "install":
+        install_skill(args.path, args.skill_id, args.scope, args.yes)
+
+    elif args.command == "skills" and args.skills_command == "verify":
+        verified = verify_skills(args.path, args.skill_id)
+        if not verified:
+            raise SystemExit(1)
+
+    elif args.command == "learn" and args.learn_command == "propose":
+        learn_propose(args.path)
+
+    elif args.command == "learn" and args.learn_command == "apply":
+        learn_apply(args.path, args.proposal)
 
     elif args.command == "memory":
         if args.memory_command == "init":

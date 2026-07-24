@@ -20,6 +20,11 @@ Cadierno AI propone una metodología donde cada especialista tiene una responsab
 
 El criterio humano siempre tiene la última palabra.
 
+Cadierno funciona como el cerebro externo local del proyecto: instala su
+contexto en `.cadierno-ai/`, mientras que trabajás diariamente con el asistente
+que prefieras (Codex, Claude o Cursor). Sus bridges y su memoria son locales y
+se excluyen del repositorio del proyecto.
+
 ---
 
 # Componentes
@@ -95,6 +100,16 @@ Cadierno AI dispone de una memoria propia para almacenar preferencias, aprendiza
 
 Esta información es independiente de cada proyecto.
 
+## Contexto, adapters y aprendizaje
+
+- `context.md` reúne el mapa operativo que los asistentes deben leer primero.
+- Los adapters habilitan Codex, Claude y Cursor sin modificar archivos
+  versionados del proyecto.
+- Las skills son extensiones opcionales, verifican su origen oficial y requieren
+  instalación explícita.
+- El aprendizaje es supervisado: Cadierno propone decisiones, deuda o lecciones
+  y una persona aprueba cada ítem antes de persistirlo.
+
 ---
 
 ## Styles
@@ -131,16 +146,16 @@ Actualmente:
 
 ## V3
 
-- MCP
-- Automatización
-- Console
-- Marketplace
-- Integración con Mem0
+- Stack local unificado en `.cadierno-ai/`
+- Contexto operativo generado y adapters para Codex, Claude y Cursor
+- Catálogo de skills opcionales y aprendizaje supervisado
+- Console compatible con terminales modernas y modo plano para CI/logs
+- Próximo: validación de fuentes, más integraciones y automatización guiada
 
 Nota estado actual:
 
-- V2.2 ya incluye memoria persistente en SQLite, comandos `memory` y servidor MCP-like local.
-- V3 queda orientado a integraciones avanzadas y automatizacion ampliada.
+- V2.2 incluye memoria persistente en SQLite, comandos `memory` y servidor MCP-like local.
+- V3 está en evolución; consultá la guía de comandos para el alcance operativo actual.
 
 ---
 

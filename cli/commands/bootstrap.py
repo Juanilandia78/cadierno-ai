@@ -1,6 +1,9 @@
 from pathlib import Path
 
 from core.memory import add_history_event, initialize_memory, mark_workspace_event
+from utils.path import cadierno_root
+from core.context import generate_context
+from ui import banner, console, success, error
 from core.scanner import scan
 
 
@@ -264,18 +267,19 @@ def bootstrap(path: str):
 
     project_path = Path(path).resolve()
 
-    print("\nBootstrap\n")
-    print(f"Proyecto: {project_path}")
+    banner()
+    console.print("\n[bold]Bootstrap[/]\n")
+    console.print(f"Proyecto: [cyan]{project_path}[/]")
 
     if not project_path.exists() or not project_path.is_dir():
-        print("✖ La carpeta indicada no existe o no es válida.")
+        error("La carpeta indicada no existe o no es válida.")
         return
 
     initialize_memory(project_path)
 
     project = scan(project_path)
 
-    knowledge_dir = project_path / "knowledge"
+    knowledge_dir = cadierno_root(project_path) / "knowledge"
     knowledge_dir.mkdir(parents=True, exist_ok=True)
 
     target = knowledge_dir / "project.md"
@@ -289,13 +293,11 @@ def bootstrap(path: str):
 
     technical_debt_target = knowledge_dir / "technical-debt.md"
     technical_debt_target.write_text(_render_technical_debt_markdown(project), encoding="utf-8")
+    generate_context(project_path)
 
     mark_workspace_event(project_path, "bootstrap")
     add_history_event(project_path, "bootstrap", "Análisis y generación de knowledge ejecutados")
 
-    print("\nResultado:")
-    print("✔ Proyecto analizado")
-    print("✔ knowledge/project.md generado")
-    print("✔ knowledge/architecture.md generado")
-    print("✔ knowledge/integrations.md generado")
-    print("✔ knowledge/technical-debt.md generado")
+    console.print("\n[bold]Resultado[/]")
+    for item in ("Proyecto analizado", ".cadierno-ai/knowledge/project.md generado", ".cadierno-ai/knowledge/architecture.md generado", ".cadierno-ai/knowledge/integrations.md generado", ".cadierno-ai/knowledge/technical-debt.md generado", ".cadierno-ai/context.md generado"):
+        success(item)

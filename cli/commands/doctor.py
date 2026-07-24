@@ -1,12 +1,9 @@
+from ui import banner, console
+from core.version import VERSION
+
 def doctor():
-
-    print("\nCadierno Doctor\n")
-
-    print("-----------------------------")
-    print("CLI................. OK")
-    print("Templates........... OK")
-    print("Playbooks........... OK")
-    print("Specialists......... OK")
-    print("Memory.............. OK")
-    print("Version............. 0.2.2")
-    print("-----------------------------")
+    banner()
+    console.print("\n[bold]Cadierno Doctor[/]\n")
+    for item in ("CLI", "Templates", "Playbooks", "Specialists", "Memory"):
+        console.print(f"[green]✓[/] {item}: OK")
+    console.print(f"[dim]Version: {VERSION}[/]")

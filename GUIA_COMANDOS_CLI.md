@@ -10,9 +10,10 @@ proyecto destino.
 python3 cadierno.py install /ruta/proyecto
 python3 cadierno.py bootstrap /ruta/proyecto
 python3 cadierno.py memory init /ruta/proyecto
+python3 cadierno.py adapters enable codex claude cursor --path /ruta/proyecto
 ```
 
-`install` instala los assets; `bootstrap` analiza el código; `memory init`
+`install` instala `.cadierno-ai/` y bridges locales ignorados por Git; `bootstrap` analiza el código; `memory init`
 prepara memoria local. Para un proyecto vacío, creá primero el stack base y
 luego ejecutá `bootstrap` nuevamente.
 
@@ -20,8 +21,8 @@ luego ejecutá `bootstrap` nuevamente.
 
 ### `install [path]`
 
-Instala `.ai/`, playbooks, checklists, `knowledge/`, `memory/`, `AGENTS.md` y
-`CLAUDE.md` si no existen. No debería pisar archivos locales.
+Instala el stack completo dentro de `.cadierno-ai/`. Los bridges de Codex,
+Claude y Cursor son locales y no se versionan.
 
 ```bash
 python3 cadierno.py install /ruta/proyecto
@@ -30,7 +31,8 @@ python3 cadierno.py install /ruta/proyecto
 ### `bootstrap [path]`
 
 Detecta stack, arquitectura, integraciones y deuda técnica; genera o completa
-los archivos de `knowledge/`.
+los archivos de `.cadierno-ai/knowledge/` y actualiza el índice operativo
+`.cadierno-ai/context.md`.
 
 ```bash
 python3 cadierno.py bootstrap /ruta/proyecto
@@ -66,12 +68,64 @@ python3 cadierno.py finish /ruta/proyecto --push --tag v2.2.0
 ### `uninstall [path]`
 
 Elimina assets de Cadierno. Usá `--purge` únicamente si también querés borrar
-`knowledge/` y `memory/`.
+`.cadierno-ai/knowledge/` y `.cadierno-ai/memory/`.
 
 ```bash
 python3 cadierno.py uninstall /ruta/proyecto
 python3 cadierno.py uninstall /ruta/proyecto --purge
 ```
+
+## Adaptadores y contexto
+
+### `adapters enable`
+
+Configura bridges locales para que Codex, Claude y Cursor encuentren las
+instrucciones de Cadierno. Los archivos generados se excluyen del Git local:
+no se agregan al `.gitignore` versionado ni se suben al repositorio.
+
+```bash
+python3 cadierno.py adapters enable codex claude cursor --path /ruta/proyecto
+```
+
+### `context generate [path]`
+
+Regenera `.cadierno-ai/context.md`, el índice breve que indica a cualquier
+asistente dónde leer el contexto, la filosofía de trabajo y los límites de
+seguridad del proyecto.
+
+```bash
+python3 cadierno.py context generate /ruta/proyecto
+```
+
+## Skills opcionales
+
+Las skills amplían capacidades puntuales, pero nunca se instalan solas. Primero
+se sugieren según la tarea y luego requieren confirmación explícita.
+
+```bash
+python3 cadierno.py skills suggest "Consultar documentación actual de Laravel" --path /ruta/proyecto
+python3 cadierno.py skills verify context7 --path /ruta/proyecto
+python3 cadierno.py skills install context7 --path /ruta/proyecto --scope project
+```
+
+`--scope project` las instala en `.cadierno-ai/skills/`; `--scope global` las
+instala en el perfil local del usuario. Revisá siempre origen y permisos antes
+de confirmar una instalación. `skills verify` consulta el origen remoto y
+comprueba que coincide con el proveedor oficial registrado antes de instalar.
+
+## Aprendizaje supervisado
+
+Al cerrar una tarea, Cadierno puede proponer decisiones, deuda o lecciones,
+pero no actualiza conocimiento por su cuenta. La persona revisa y aprueba cada
+ítem.
+
+```bash
+python3 cadierno.py learn propose /ruta/proyecto
+python3 cadierno.py learn apply .cadierno-ai/learning/proposal-AAAAMMDD-HHMMSS.md --path /ruta/proyecto
+```
+
+Los ítems aprobados se agregan localmente a `knowledge/decisions.md`,
+`knowledge/technical-debt.md` o `memory/lessons.md`, según corresponda.
 
 ## Ayuda para trabajar
 
@@ -128,6 +182,7 @@ credenciales ni conversaciones completas innecesarias.
 
 ```bash
 python3 cadierno.py --help
+python3 cadierno.py --plain doctor
 python3 cadierno.py memory --help
 python3 cadierno.py memory save --help
 ```

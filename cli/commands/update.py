@@ -3,12 +3,17 @@ import hashlib
 import shutil
 
 from core.memory import add_history_event, initialize_memory, mark_workspace_event
+from utils.path import cadierno_root
+from utils.git import ensure_local_cadierno_excludes
+from core.context import generate_context
+from ui import banner, console, success, warning, info, error
 
 
 SYNC_DIRECTORIES = [
-    ".ai",
+    "ai",
     "playbooks",
     "checklists",
+    "skills",
 ]
 
 
@@ -67,15 +72,18 @@ def update(path: str):
     project = Path(path).resolve()
     framework = Path(__file__).resolve().parent.parent.parent
 
-    print("\nUpdate\n")
-    print(f"Framework : {framework}")
-    print(f"Proyecto  : {project}\n")
+    banner()
+    console.print("\n[bold]Update[/]\n")
+    console.print(f"Framework: [cyan]{framework}[/]\nProyecto: [cyan]{project}[/]\n")
 
     if not project.exists() or not project.is_dir():
-        print("✖ La carpeta indicada no existe o no es válida.")
+        error("La carpeta indicada no existe o no es válida.")
         return
 
+    ensure_local_cadierno_excludes(project)
+
     initialize_memory(project)
+    generate_context(project)
 
     total_copied = 0
     total_unchanged = 0
@@ -84,8 +92,8 @@ def update(path: str):
     print("Sincronizando directorios base...\n")
 
     for directory in SYNC_DIRECTORIES:
-        source = framework / directory
-        destination = project / directory
+        source = framework / (".ai" if directory == "ai" else directory)
+        destination = cadierno_root(project) / directory
 
         if not source.exists():
             print(f"⚠ No encontrado en framework: {directory}")
@@ -96,12 +104,12 @@ def update(path: str):
         total_unchanged += unchanged
         total_skipped += skipped
 
-        print(f"• {directory}: +{copied} | ={unchanged} | !{skipped}")
+        info(f"{directory}: +{copied} | ={unchanged} | !{skipped}")
 
     print("\nSincronizando AGENTS.md...\n")
 
     template = framework / "templates" / "AGENTS.template.md"
-    target_agents = project / "AGENTS.md"
+    target_agents = cadierno_root(project) / "AGENTS.md"
 
     if template.exists():
         result = _safe_copy_file(template, target_agents)
@@ -121,7 +129,7 @@ def update(path: str):
     print("\nSincronizando CLAUDE.md...\n")
 
     claude_template = framework / "templates" / "CLAUDE.template.md"
-    target_claude = project / "CLAUDE.md"
+    target_claude = cadierno_root(project) / "CLAUDE.md"
 
     if claude_template.exists():
         result = _safe_copy_file(claude_template, target_claude)
@@ -138,10 +146,10 @@ def update(path: str):
     else:
         print("⚠ No se encontró templates/CLAUDE.template.md")
 
-    print("\nResumen:")
-    print(f"✔ Nuevos archivos copiados: {total_copied}")
-    print(f"• Archivos sin cambios: {total_unchanged}")
-    print(f"⚠ Archivos locales preservados (conflicto): {total_skipped}")
+    console.print("\n[bold]Resumen[/]")
+    success(f"Nuevos archivos copiados: {total_copied}")
+    info(f"Archivos sin cambios: {total_unchanged}")
+    warning(f"Archivos locales preservados (conflicto): {total_skipped}")
 
     mark_workspace_event(project, "update")
     add_history_event(

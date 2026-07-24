@@ -1,25 +1,5 @@
-# AGENTS
+# Cadierno AI bridge
 
-Este archivo es generado automáticamente por Cadierno AI.
+Antes de trabajar, leé `.cadierno-ai/context.md` y los documentos que ese índice indique según la tarea. Cadierno es local: no agregues ni versionés `.cadierno-ai`, `AGENTS.md`, `CLAUDE.md` ni reglas de adapters.
 
-Describe las características generales del proyecto.
-
-## Framework
-
-## Backend
-
-## Frontend
-
-## Base de datos
-
-## Infraestructura
-
-## Arquitectura
-
-## Convenciones
-
-## Integraciones
-
-## Comandos frecuentes
-
-## Observaciones
+Respetá el alcance aprobado, mostrá evidencia y detenete al finalizar cada microtarea para revisión.

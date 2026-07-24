@@ -2,6 +2,10 @@ from pathlib import Path
 import shutil
 
 from core.memory import add_history_event, initialize_memory
+from utils.path import cadierno_root
+from utils.git import ensure_local_cadierno_excludes
+from core.context import generate_context
+from ui import banner, success, info, warning
 
 
 def copy_directory(source: Path, destination: Path):
@@ -10,15 +14,15 @@ def copy_directory(source: Path, destination: Path):
     """
 
     if not source.exists():
-        print(f"⚠ No encontrado: {source.name}")
+        warning(f"No encontrado: {source.name}")
         return
 
     if destination.exists():
-        print(f"• Ya existe: {destination.name}")
+        info(f"Ya existe: {destination.name}")
         return
 
     shutil.copytree(source, destination)
-    print(f"✔ Copiado: {destination.name}")
+    success(f"Copiado: {destination.name}")
 
 
 def create_directory(path: Path):
@@ -28,7 +32,7 @@ def create_directory(path: Path):
 
     if not path.exists():
         path.mkdir(parents=True)
-        print(f"✔ Creado: {path.name}")
+        success(f"Creado: {path.name}")
 
 
 def create_file(path: Path, content: str):
@@ -40,7 +44,7 @@ def create_file(path: Path, content: str):
         return
 
     path.write_text(content, encoding="utf-8")
-    print(f"✔ Archivo: {path.name}")
+    success(f"Archivo: {path.name}")
 
 
 def install(path: str):
@@ -53,11 +57,7 @@ def install(path: str):
     # raíz del framework
     framework = cli_dir.parent
 
-    print()
-    print("===================================")
-    print("     Cadierno AI Installer")
-    print("===================================")
-    print()
+    banner()
 
     print(f"Framework : {framework}")
     print(f"Proyecto  : {project}")
@@ -68,29 +68,26 @@ def install(path: str):
         print("✖ La carpeta indicada no existe.")
         return
 
+    if ensure_local_cadierno_excludes(project):
+        print("✔ Exclusiones locales Git configuradas")
+    else:
+        print("• Proyecto sin Git: no se requieren exclusiones locales")
+
     print("Copiando framework...\n")
 
-    copy_directory(
-        framework / ".ai",
-        project / ".ai"
-    )
-
-    copy_directory(
-        framework / "playbooks",
-        project / "playbooks"
-    )
-
-    copy_directory(
-        framework / "checklists",
-        project / "checklists"
-    )
+    cadierno = cadierno_root(project)
+    create_directory(cadierno)
+    copy_directory(framework / ".ai", cadierno / "ai")
+    copy_directory(framework / "playbooks", cadierno / "playbooks")
+    copy_directory(framework / "checklists", cadierno / "checklists")
+    copy_directory(framework / "skills", cadierno / "skills")
 
     print()
 
-    create_directory(project / "knowledge")
-    create_directory(project / "memory")
+    create_directory(cadierno / "knowledge")
+    create_directory(cadierno / "memory")
 
-    knowledge = project / "knowledge"
+    knowledge = cadierno / "knowledge"
 
     create_file(
         knowledge / "project.md",
@@ -117,7 +114,7 @@ def install(path: str):
         "# Deuda Técnica\n\nPendientes encontrados durante el análisis.\n"
     )
 
-    memory = project / "memory"
+    memory = cadierno / "memory"
 
     create_file(
         memory / "history.md",
@@ -145,39 +142,54 @@ def install(path: str):
     )
 
     initialize_memory(project)
+    generate_context(project)
     add_history_event(project, "install", "Cadierno AI instalado en proyecto")
 
     template = framework / "templates" / "AGENTS.template.md"
-    agent = project / "AGENTS.md"
+    agent = cadierno / "AGENTS.md"
 
     if template.exists():
 
         if not agent.exists():
 
             shutil.copy2(template, agent)
-            print("✔ Archivo: AGENTS.md")
+            print("✔ Archivo: .cadierno-ai/AGENTS.md")
 
         else:
 
-            print("• Ya existe: AGENTS.md")
+            print("• Ya existe: .cadierno-ai/AGENTS.md")
+
+        root_agent = project / "AGENTS.md"
+        if not root_agent.exists():
+            shutil.copy2(template, root_agent)
+            print("✔ Bridge local: AGENTS.md")
+        else:
+            print("• Se conserva AGENTS.md existente")
 
     claude_template = framework / "templates" / "CLAUDE.template.md"
-    claude_file = project / "CLAUDE.md"
+    claude_file = cadierno / "CLAUDE.md"
 
     if claude_template.exists():
 
         if not claude_file.exists():
 
             shutil.copy2(claude_template, claude_file)
-            print("✔ Archivo: CLAUDE.md (referencia a AGENTS.md para Claude Code)")
+            print("✔ Archivo: .cadierno-ai/CLAUDE.md")
 
         elif "@AGENTS.md" in claude_file.read_text(encoding="utf-8", errors="ignore"):
 
-            print("• Ya existe: CLAUDE.md (ya referencia AGENTS.md)")
+            print("• Ya existe: .cadierno-ai/CLAUDE.md")
 
         else:
 
             print("⚠ Ya existe CLAUDE.md sin referenciar AGENTS.md: agregá la línea '@AGENTS.md' manualmente para que Claude Code cargue el contexto de Cadierno AI")
+
+        root_claude = project / "CLAUDE.md"
+        if not root_claude.exists():
+            root_claude.write_text("@.cadierno-ai/AGENTS.md\n", encoding="utf-8")
+            print("✔ Bridge local: CLAUDE.md")
+        else:
+            print("• Se conserva CLAUDE.md existente")
 
     print()
     print("===================================")

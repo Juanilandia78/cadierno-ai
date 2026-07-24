@@ -2,6 +2,7 @@ from pathlib import Path
 import subprocess
 
 from core.memory import add_history_event, initialize_memory
+from ui import banner, console, error, info
 
 
 def _run_git(project_path: Path, args: list[str]) -> tuple[int, str]:
@@ -36,10 +37,11 @@ def finish(path: str, push: bool = False, branch_name: str | None = None, tag_na
 
     project_path = Path(path).resolve()
 
-    print("\nCadierno Finish\n")
+    banner()
+    console.print("\n[bold]Cadierno Finish[/]\n")
 
     if not project_path.exists() or not project_path.is_dir():
-        print("✖ La carpeta indicada no existe o no es válida.")
+        error("La carpeta indicada no existe o no es válida.")
         return
 
     initialize_memory(project_path)
@@ -60,8 +62,7 @@ def finish(path: str, push: bool = False, branch_name: str | None = None, tag_na
 
     add_history_event(project_path, "finish", f"branch={branch} status={len(status.splitlines())}")
 
-    print(f"Proyecto........... {project_path}")
-    print(f"Rama actual........ {branch}")
+    console.print(f"Proyecto: [cyan]{project_path}[/]\nRama actual: [bold]{branch}[/]")
     print("Remotos............")
     print(remote if remote else "(sin remotos)")
     print("\nEstado git.........")
