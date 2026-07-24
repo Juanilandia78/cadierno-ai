@@ -45,5 +45,5 @@ leer `.cadierno-ai/context.md`, que deriva a la documentación relevante.
 
 Cadierno sólo propone aprendizajes; aprobás, editás o rechazás cada ítem.
 
-Siguiente paso: [MANUAL_DE_USO.md](MANUAL_DE_USO.md). Referencia completa:
+Siguiente paso: [GUIA_EQUIPO.md](GUIA_EQUIPO.md). Referencia completa:
 [GUIA_COMANDOS_CLI.md](GUIA_COMANDOS_CLI.md).

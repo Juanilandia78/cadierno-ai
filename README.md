@@ -1,6 +1,8 @@
 # Cadierno AI
 
-Empezá por la [ruta de documentación V3](docs/README.md).
+Para usar Cadierno en equipo, empezá por [QUICKSTART.md](QUICKSTART.md) y
+[GUIA_EQUIPO.md](GUIA_EQUIPO.md). La referencia completa está en
+[GUIA_COMANDOS_CLI.md](GUIA_COMANDOS_CLI.md).
 
 > **Pensá. Diseñá. Construí. Revisá. Evolucioná.**
 
