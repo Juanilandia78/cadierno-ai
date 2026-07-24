@@ -124,8 +124,9 @@ python3 cadierno.py learn propose /ruta/proyecto
 python3 cadierno.py learn apply .cadierno-ai/learning/proposal-AAAAMMDD-HHMMSS.md --path /ruta/proyecto
 ```
 
-Los ítems aprobados se agregan localmente a `knowledge/decisions.md`,
-`knowledge/technical-debt.md` o `memory/lessons.md`, según corresponda.
+Los ítems aprobados se agregan localmente a `.cadierno-ai/knowledge/decisions.md`,
+`.cadierno-ai/knowledge/technical-debt.md` o `.cadierno-ai/memory/lessons.md`,
+según corresponda.
 
 ## Ayuda para trabajar
 

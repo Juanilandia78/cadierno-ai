@@ -148,9 +148,9 @@ Actualmente:
 
 - Stack local unificado en `.cadierno-ai/`
 - Contexto operativo generado y adapters para Codex, Claude y Cursor
-- Catálogo de skills opcionales y aprendizaje supervisado
+- Catálogo de skills opcionales con verificación de fuente y aprendizaje supervisado
 - Console compatible con terminales modernas y modo plano para CI/logs
-- Próximo: validación de fuentes, más integraciones y automatización guiada
+- Base preparada para nuevas integraciones y automatización siempre guiada
 
 Nota estado actual:
 
