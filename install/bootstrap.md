@@ -1,5 +1,8 @@
 # Cadierno AI Bootstrap
 
+> Documento técnico histórico del bootstrap previo a V3. La estructura vigente
+> instala los assets dentro de `.cadierno-ai/`; consultá `MANUAL_DE_USO.md`.
+
 ## Objetivo
 
 Inicializar Cadierno AI dentro de cualquier proyecto.

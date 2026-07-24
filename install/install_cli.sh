@@ -27,6 +27,11 @@ fi
 echo "==> Actualizando pip/setuptools/wheel"
 "${VENV_DIR}/bin/python" -m pip install --upgrade pip setuptools wheel
 
+if [[ -f "${ROOT_DIR}/requirements.txt" ]]; then
+  echo "==> Instalando dependencias de Cadierno"
+  "${VENV_DIR}/bin/python" -m pip install -r "${ROOT_DIR}/requirements.txt"
+fi
+
 echo "==> Verificando instalacion de Cadierno"
 "${VENV_DIR}/bin/python" "${ROOT_DIR}/cli/cadierno.py" --version
 "${VENV_DIR}/bin/python" "${ROOT_DIR}/cli/cadierno.py" doctor
@@ -36,8 +41,9 @@ cat <<EOF
 Instalacion finalizada.
 
 Uso rapido:
+  ${VENV_DIR}/bin/python ${ROOT_DIR}/cli/cadierno.py install /ruta/proyecto
   ${VENV_DIR}/bin/python ${ROOT_DIR}/cli/cadierno.py bootstrap /ruta/proyecto
-  ${VENV_DIR}/bin/python ${ROOT_DIR}/cli/cadierno.py memory init /ruta/proyecto
+  ${VENV_DIR}/bin/python ${ROOT_DIR}/cli/cadierno.py adapters enable codex claude cursor gemini vscode copilot --path /ruta/proyecto
 
 Nota SQLite:
   Cadierno usa sqlite3 del standard library de Python.

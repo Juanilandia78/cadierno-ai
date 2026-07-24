@@ -1,5 +1,8 @@
 # Cadierno AI v2.2.0
 
+> Notas históricas de V2.2. Para el release vigente consultá `CHANGELOG.md` y
+> la documentación V3 en `docs/README.md`.
+
 Version orientada a uso diario estable, con memoria persistente mejorada e instalacion multiplataforma.
 
 ## Highlights

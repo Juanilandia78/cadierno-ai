@@ -4,10 +4,10 @@ Este proyecto usa Cadierno AI.
 
 Leé primero:
 - AGENTS.md
-- knowledge/project.md
-- knowledge/architecture.md
-- knowledge/integrations.md
-- knowledge/technical-debt.md
+- .cadierno-ai/knowledge/project.md
+- .cadierno-ai/knowledge/architecture.md
+- .cadierno-ai/knowledge/integrations.md
+- .cadierno-ai/knowledge/technical-debt.md
 
 Actuá como [ROL] de Cadierno AI.
 

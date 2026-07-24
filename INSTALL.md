@@ -1,101 +1,66 @@
-# Instalacion de Cadierno AI
+# Instalación de Cadierno AI V3
 
 ## Requisitos
 
-- Python 3.10 o superior
-- Git
-- Shell bash/zsh (macOS o Linux)
-- PowerShell (Windows, opcional)
+- Python 3.10 o superior.
+- Git.
+- macOS/Linux: bash o zsh. Windows: PowerShell.
 
-Cadierno AI funciona con asistentes que puedan leer Markdown:
+Cadierno funciona localmente con Codex, Claude, Cursor, Gemini CLI y VS
+Code/GitHub Copilot mediante adapters opcionales.
 
-- Claude Code
-- GitHub Copilot (modo agente)
-- Cursor
-- ChatGPT
-- Otros compatibles
-
-## Instalacion local recomendada (1 comando)
-
-1. Clonar el repositorio:
+## macOS y Linux
 
 ```bash
-git clone https://github.com/TU_USUARIO/cadierno-ai.git
+git clone https://github.com/Juanilandia78/cadierno-ai.git
 cd cadierno-ai
-```
-
-2. Ejecutar instalador:
-
-```bash
 ./install/install_cli.sh
 ```
 
-Ese script crea `.venv`, actualiza pip y valida Cadierno con `--version` + `doctor`.
+El script crea `.venv`, instala las dependencias de Cadierno, y ejecuta
+`--version` y `doctor`.
 
-## Instalacion en Windows
+## Windows
 
-Desde PowerShell en la raiz del repo:
+Desde PowerShell, en la raíz del repositorio:
 
 ```powershell
 .\install\install_cli.ps1
 ```
 
-Ese script crea `.venv`, actualiza pip y valida Cadierno con `--version` + `doctor`.
-
-Si queres instalar sin entorno virtual:
+Para usar Python global sin entorno virtual:
 
 ```powershell
 .\install\install_cli.ps1 -NoVenv
 ```
 
-## Uso inicial
-
-Con el entorno creado:
+## Comprobar la instalación
 
 ```bash
-./.venv/bin/python cli/cadierno.py bootstrap /ruta/proyecto
-./.venv/bin/python cli/cadierno.py memory init /ruta/proyecto
+./.venv/bin/python cli/cadierno.py --version
+./.venv/bin/python cli/cadierno.py doctor
 ```
 
-En Windows:
+En Windows: `.\.venv\Scripts\python.exe .\cli\cadierno.py doctor`.
 
-```powershell
-.\.venv\Scripts\python.exe .\cli\cadierno.py bootstrap C:\ruta\proyecto
-.\.venv\Scripts\python.exe .\cli\cadierno.py memory init C:\ruta\proyecto
-```
-
-## .venv es obligatorio?
-
-No es obligatorio, pero si muy recomendado.
-
-Ventajas de `.venv`:
-
-- Aisla dependencias de Cadierno de otros proyectos.
-- Evita conflictos de versiones de Python/pip.
-- Hace reproducible la instalacion en cualquier PC.
-
-Sin `.venv` funciona, pero usa el Python global del sistema.
-
-## SQLite: se instala aparte?
-
-No. Cadierno usa `sqlite3` del standard library de Python.
-
-No necesitas instalar SQLite por separado para la memoria local.
-
-Archivos que crea automaticamente:
-
-- `~/.cadierno-ai/brain.db` (memoria de usuario)
-- `/ruta/proyecto/memory/.cadierno/brain.db` (memoria de workspace)
-
-## Actualizacion
+## Actualizar Cadierno
 
 ```bash
 git pull
 ./install/install_cli.sh
 ```
 
-## Filosofia
+Después sincronizá el contexto de cada proyecto consumidor:
 
-Cadierno AI se adapta al proyecto.
+```bash
+./.venv/bin/python cli/cadierno.py update /ruta/proyecto
+```
 
-Nunca intenta que el proyecto se adapte a Cadierno AI.
+## Datos locales
+
+Cadierno no necesita instalar SQLite: usa `sqlite3` incluido con Python.
+
+- Memoria de usuario: `~/.cadierno-ai/brain.db`.
+- Memoria del proyecto: `/ruta/proyecto/.cadierno-ai/memory/.cadierno/brain.db`.
+
+La instalación en un proyecto se explica en [QUICKSTART.md](QUICKSTART.md).

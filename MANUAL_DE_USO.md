@@ -1,234 +1,106 @@
-# Manual de Uso - Cadierno AI
+# Manual de uso V3
 
-## Objetivo
+Cadierno AI es el contexto, memoria y método local de un proyecto. No reemplaza
+al asistente: trabajás con Codex, Claude, Cursor, Gemini CLI o VS Code/Copilot;
+Cadierno les da un marco consistente y vos conservás la decisión final.
 
-Este manual explica como usar Cadierno AI V2.2 para trabajo diario real en proyectos existentes sin cambiar arquitectura innecesariamente.
+## La regla principal
 
-Cadierno AI en V2.1 se centra en cerrar este flujo:
+1. Relevar antes de cambiar.
+2. Diseñar antes de implementar cambios sensibles.
+3. Dividir en microtareas, probar y mostrar evidencia.
+4. Proponer decisiones, deuda y lecciones; nunca aplicarlas sin aprobación.
 
-1. Instalar assets base de Cadierno AI en el proyecto.
-2. Ejecutar bootstrap para detectar stack y generar conocimiento inicial.
-3. Empezar a trabajar con Specialists + Workflows usando el contexto generado.
+## Preparación inicial de un proyecto
 
----
-
-## Alcance de V2.2
-
-Estado de comandos CLI:
-
-- cadierno install: funcional
-- cadierno bootstrap: funcional
-- cadierno doctor: funcional
-- cadierno uninstall: funcional
-- cadierno update: funcional (modo seguro)
-- cadierno memory: funcional
-- cadierno assist: funcional
-
-Lo que V2.1 SI resuelve:
-
-- Inicializacion rapida del proyecto con .ai, playbooks y checklists.
-- Creacion de knowledge/ y memory/.
-- Generacion de AGENTS.md.
-- Deteccion automatica de stack base y generacion de knowledge/project.md.
-- Generacion inicial de knowledge/architecture.md, knowledge/integrations.md y knowledge/technical-debt.md.
-- Memoria persistente de usuario y workspace.
-- Perfil de desarrollador editable por CLI.
-- Historial de eventos entre proyectos.
-
-Lo que V2.1 todavia NO resuelve:
-
-- Integración con Mem0/MCP (opcional y futuro).
-- Automatización completa de specialists/workflows.
-
----
-
-## Avances de V2.2
-
-Actualmente Cadierno incluye mejoras V2.2 sobre memoria:
-
-- Backend de memoria local en SQLite.
-- MCP local (stdio) para herramientas de memoria en `cli/mcp_memory_server.py`.
-- Operaciones de observaciones: save/search/context.
-- Sugerencia automática de workflow/specialists con `cadierno assist`.
-
----
-
-## Requisitos
-
-- Python 3.10+.
-- Acceso al repositorio cadierno-ai.
-- Proyecto destino con permisos de lectura/escritura.
-
----
-
-## Instalacion de Cadierno AI en un proyecto
-
-Desde la carpeta cli de cadierno-ai:
+Desde el repositorio de Cadierno AI:
 
 ```bash
-python cadierno.py install /ruta/al/proyecto
+./.venv/bin/python cli/cadierno.py install /ruta/proyecto
+./.venv/bin/python cli/cadierno.py bootstrap /ruta/proyecto
+./.venv/bin/python cli/cadierno.py adapters enable codex claude cursor gemini vscode copilot --path /ruta/proyecto
 ```
 
-Resultado esperado:
+`install` instala el stack local; `bootstrap` releva el código; los adapters
+conectan los asistentes. Los tres pasos son seguros frente a Git: Cadierno usa
+`.git/info/exclude`, no modifica el `.gitignore` versionado y preserva bridges
+que ya existían.
 
-- Copia: .ai/, playbooks/, checklists/
-- Crea: knowledge/, memory/
-- Genera: AGENTS.md
+## Qué queda en el proyecto
 
-Notas:
+```text
+.cadierno-ai/
+  context.md        índice de lectura para los asistentes
+  AGENTS.md         reglas operativas locales
+  knowledge/        proyecto, arquitectura, integraciones y deuda
+  memory/           SQLite, historial y lecciones aprobadas
+  playbooks/        guías técnicas
+  skills/           catálogo e skills opcionales
+  learning/         propuestas a revisar
+```
 
-- No sobrescribe carpetas que ya existen.
-- Crea archivos base solo si no existen.
+Los bridges de raíz (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, reglas de Cursor y
+`copilot-instructions.md`) son locales y no se publican.
 
----
+## Flujo de trabajo real
 
-## Bootstrap del proyecto
+Ejemplo: agregar expiración de una reserva pendiente de pago.
 
-Ejecutar:
+1. Pedile al asistente análisis y propuesta; no código todavía.
+2. Revisá estados, webhook, idempotencia y riesgo de pago tardío.
+3. Aprobá el diseño y pedí una microtarea concreta.
+4. Exigí pruebas y evidencia al finalizar.
+5. Si el aprendizaje es reusable, generá propuesta y aprobá sólo lo útil:
 
 ```bash
-python cadierno.py bootstrap /ruta/al/proyecto
+./.venv/bin/python cli/cadierno.py learn propose /ruta/proyecto
+./.venv/bin/python cli/cadierno.py learn apply /ruta/proyecto/.cadierno-ai/learning/proposal-AAAAMMDD-HHMMSS.md --path /ruta/proyecto
 ```
 
-Bootstrap detecta automaticamente archivos clave (si existen):
+## Usar conocimiento y memoria
 
-- composer.json
-- package.json
-- docker-compose.yml
-- Dockerfile
-- README.md
-
-Con esto intenta identificar:
-
-- lenguaje
-- framework
-- frontend
-- base de datos
-- infraestructura
-
-Y genera:
-
-- knowledge/project.md
-- knowledge/architecture.md
-- knowledge/integrations.md
-- knowledge/technical-debt.md
-
----
-
-## Memoria persistente (V2.2)
-
-Cadierno AI guarda memoria en dos niveles:
-
-- Usuario global: ~/.cadierno-ai
-- Workspace/proyecto: /ruta/proyecto/memory/.cadierno
-
-Comandos principales:
+Antes de una tarea, el asistente debe leer `context.md` y los archivos que éste
+señale. Para inspeccionar la memoria manualmente:
 
 ```bash
-python cadierno.py memory init /ruta/al/proyecto
-python cadierno.py memory status /ruta/al/proyecto
-python cadierno.py memory style argentino /ruta/al/proyecto --scope workspace
-python cadierno.py memory profile /ruta/al/proyecto --name "Tu Nombre" --role "Software Engineer" --seniority "Senior" --scope user
-python cadierno.py memory history /ruta/al/proyecto --scope workspace --limit 20
-python cadierno.py memory save /ruta/al/proyecto --title "Decisión" --content "Usar service layer" --type decision --tags arquitectura,backend
-python cadierno.py memory search "service layer" /ruta/al/proyecto --scope workspace --limit 10
-python cadierno.py memory context /ruta/al/proyecto --scope workspace --limit 10
-python cadierno.py assist "Hay un bug en pagos duplicados" /ruta/al/proyecto
+./.venv/bin/python cli/cadierno.py memory context /ruta/proyecto --scope workspace --limit 10
+./.venv/bin/python cli/cadierno.py memory search "Mercado Pago" /ruta/proyecto --scope workspace
 ```
 
-El estilo de comunicación efectivo se resuelve por prioridad:
+Guardá observaciones manuales sólo si son reutilizables y no contienen secretos:
 
-1. workspace
-2. user
-3. professional por defecto
+```bash
+./.venv/bin/python cli/cadierno.py memory save /ruta/proyecto \
+  --title "Decisión de pagos" \
+  --content "Las reservas vencidas no se reactivan por un pago tardío." \
+  --type decision --tags pagos,reservas
+```
 
----
+## Skills y documentación actual
 
-## Uso recomendado diario
+Cuando una tarea depende de documentación de una librería, pedí sugerencias y
+verificá el origen antes de instalar una skill:
 
-Flujo de trabajo sugerido por sprint:
+```bash
+./.venv/bin/python cli/cadierno.py skills suggest "Documentación actual de Laravel" --path /ruta/proyecto
+./.venv/bin/python cli/cadierno.py skills verify context7 --path /ruta/proyecto
+./.venv/bin/python cli/cadierno.py skills install context7 --path /ruta/proyecto --scope project
+```
 
-1. Ejecutar install (solo una vez por proyecto).
-2. Ejecutar bootstrap al inicio o cuando el stack cambie.
-3. Pedir tareas al asistente usando Workflows y Specialists.
-4. Mantener knowledge/ actualizado para mejorar decisiones de IA.
+## Operación y actualización
 
-Prompts utiles:
+```bash
+./.venv/bin/python cli/cadierno.py doctor
+./.venv/bin/python cli/cadierno.py update /ruta/proyecto
+./.venv/bin/python cli/cadierno.py finish /ruta/proyecto
+```
 
-- "Ejecuta el workflow New Feature para este requerimiento..."
-- "Ejecuta el workflow Bugfix sobre este error..."
-- "Actua como Code Reviewer sobre este PR..."
-- "Actualiza knowledge/project.md si cambie infraestructura..."
+`finish` ayuda a revisar estado Git y cierre; no sustituye tu revisión de pull
+request, pruebas de CI ni criterios de release.
 
----
+## Dónde consultar cada cosa
 
-## Verificacion rapida
-
-Checklist minimo despues de bootstrap:
-
-1. Existe knowledge/project.md.
-2. El stack detectado coincide con el proyecto real.
-3. AGENTS.md existe en la raiz del proyecto.
-4. .ai/, playbooks/ y checklists/ estan disponibles.
-
-Si algo no coincide:
-
-1. Corregir manualmente knowledge/project.md.
-2. Volver a ejecutar bootstrap.
-3. Reportar ajuste para mejorar reglas de deteccion.
-
----
-
-## Troubleshooting
-
-Caso: "No detectado" en varias secciones.
-
-- Verificar que los archivos clave existan en el proyecto.
-- Verificar que los archivos JSON sean validos.
-- Reintentar bootstrap apuntando a la carpeta raiz correcta.
-
-Caso: install no copia una carpeta.
-
-- Verificar permisos de escritura en proyecto destino.
-- Verificar que la carpeta fuente exista en cadierno-ai.
-
-Caso: salida inesperada en bootstrap.
-
-- Revisar knowledge/project.md y archivos detectados en Observaciones.
-- Ajustar reglas de scanner en una iteracion posterior.
-
----
-
-## Estado de cierre V2.2
-
-Cadierno AI V2.2 es la versión estable actual para:
-
-- instalar metodologia en un proyecto existente;
-- detectar stack base y generar knowledge;
-- persistir perfil/estilo/historial en uso diario.
-
-La memoria usa SQLite con ámbitos de usuario y workspace; `memory save`,
-`memory search`, `memory context`, `cadierno assist` y el servidor MCP-like
-local por stdio JSON-RPC están disponibles. Mem0 no es necesario para V2.2;
-integraciones avanzadas quedan para V3.
-
----
-
-## Mejoras recomendadas (sin sobrearquitectura)
-
-Prioridad alta:
-
-1. Completar update para sincronizacion segura de assets sin romper customizaciones locales.
-2. Extender bootstrap para detectar arquitectura e integraciones en knowledge/architecture.md e integrations.md.
-3. Agregar tests unitarios del scanner para casos Laravel, Symfony, Zend, PHP puro, Vue y React.
-
-Prioridad media:
-
-1. Mejorar deteccion de frontend (Livewire, Blade, Inertia, Alpine).
-2. Mejorar deteccion de bases (SQLite, SQL Server, MariaDB).
-3. Agregar bandera --dry-run en bootstrap para ver deteccion sin escribir archivos.
-
-Prioridad baja:
-
-1. Exportar reporte bootstrap en JSON para integraciones externas.
-2. Mostrar score de confianza por cada deteccion.
+- Instalación: [INSTALL.md](INSTALL.md)
+- Primer uso: [QUICKSTART.md](QUICKSTART.md)
+- Referencia total de flags y comandos: [GUIA_COMANDOS_CLI.md](GUIA_COMANDOS_CLI.md)
+- Forma de trabajo explicada para quien empieza: [GUIA_USUARIO_JUNIOR.md](GUIA_USUARIO_JUNIOR.md)

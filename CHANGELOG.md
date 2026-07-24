@@ -13,6 +13,10 @@
   humana.
 - Salida de consola mejorada con Rich y `--plain` para CI y logs.
 - Pruebas V3 para contexto y catálogo de skills.
+- Documentación V3 unificada: instalación, quickstart, manual de uso y ruta de
+  lectura; los documentos previos quedan identificados como históricos.
+- Instaladores macOS/Linux y Windows actualizados para instalar
+  `requirements.txt` antes de validar el CLI.
 
 ## v2.2.0
 

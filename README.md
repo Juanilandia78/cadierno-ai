@@ -1,6 +1,6 @@
 # Cadierno AI
 
-Documentación de comandos: [GUIA_COMANDOS_CLI.md](GUIA_COMANDOS_CLI.md).
+Empezá por la [ruta de documentación V3](docs/README.md).
 
 > **Pensá. Diseñá. Construí. Revisá. Evolucioná.**
 
@@ -82,7 +82,7 @@ Incluye:
 
 Plantillas utilizadas para generar automáticamente la documentación de cada proyecto.
 
-Bootstrap utiliza estos templates para crear:
+Bootstrap utiliza estos templates dentro de `.cadierno-ai/knowledge/` para crear:
 
 - knowledge/project.md
 - knowledge/architecture.md
@@ -154,10 +154,8 @@ Actualmente:
 - Console compatible con terminales modernas y modo plano para CI/logs
 - Base preparada para nuevas integraciones y automatización siempre guiada
 
-Nota estado actual:
-
-- V2.2 incluye memoria persistente en SQLite, comandos `memory` y servidor MCP-like local.
-- V3 está en evolución; consultá la guía de comandos para el alcance operativo actual.
+Nota de compatibilidad: la memoria SQLite y los comandos `memory` de V2.2 se
+mantienen como parte de V3.
 
 ---
 
