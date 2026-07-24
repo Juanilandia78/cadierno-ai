@@ -43,10 +43,12 @@ class V3Tests(unittest.TestCase):
 
     def test_adapter_creates_local_bridges(self):
         (self.project / ".cadierno-ai").mkdir()
-        enable(str(self.project), ["codex", "claude", "cursor"])
+        enable(str(self.project), ["codex", "claude", "cursor", "gemini", "vscode", "copilot"])
         self.assertTrue((self.project / "AGENTS.md").is_file())
         self.assertEqual((self.project / "CLAUDE.md").read_text(encoding="utf-8"), "@.cadierno-ai/AGENTS.md\n")
         self.assertTrue((self.project / ".cursor" / "rules" / "cadierno-ai.mdc").is_file())
+        self.assertIn("@.cadierno-ai/AGENTS.md", (self.project / "GEMINI.md").read_text(encoding="utf-8"))
+        self.assertIn(".cadierno-ai/context.md", (self.project / ".github" / "copilot-instructions.md").read_text(encoding="utf-8"))
 
     def test_learning_apply_marks_audited_outcomes(self):
         root = self.project / ".cadierno-ai"

@@ -22,7 +22,7 @@ El criterio humano siempre tiene la última palabra.
 
 Cadierno funciona como el cerebro externo local del proyecto: instala su
 contexto en `.cadierno-ai/`, mientras que trabajás diariamente con el asistente
-que prefieras (Codex, Claude o Cursor). Sus bridges y su memoria son locales y
+que prefieras (Codex, Claude, Cursor, Gemini CLI o VS Code/GitHub Copilot). Sus bridges y su memoria son locales y
 se excluyen del repositorio del proyecto.
 
 ---
@@ -103,7 +103,8 @@ Esta información es independiente de cada proyecto.
 ## Contexto, adapters y aprendizaje
 
 - `context.md` reúne el mapa operativo que los asistentes deben leer primero.
-- Los adapters habilitan Codex, Claude y Cursor sin modificar archivos
+- Los adapters habilitan Codex, Claude, Cursor, Gemini CLI y VS Code/GitHub
+  Copilot sin modificar archivos
   versionados del proyecto.
 - Las skills son extensiones opcionales, verifican su origen oficial y requieren
   instalación explícita.
@@ -147,7 +148,8 @@ Actualmente:
 ## V3
 
 - Stack local unificado en `.cadierno-ai/`
-- Contexto operativo generado y adapters para Codex, Claude y Cursor
+- Contexto operativo generado y adapters para Codex, Claude, Cursor, Gemini CLI
+  y VS Code/GitHub Copilot
 - Catálogo de skills opcionales con verificación de fuente y aprendizaje supervisado
 - Console compatible con terminales modernas y modo plano para CI/logs
 - Base preparada para nuevas integraciones y automatización siempre guiada

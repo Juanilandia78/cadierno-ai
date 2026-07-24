@@ -2,7 +2,14 @@ from pathlib import Path
 import subprocess
 
 
-LOCAL_CADIERNO_EXCLUDES = (".cadierno-ai/", "AGENTS.md", "CLAUDE.md", ".cursor/rules/cadierno-ai.mdc")
+LOCAL_CADIERNO_EXCLUDES = (
+    ".cadierno-ai/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".cursor/rules/cadierno-ai.mdc",
+    ".github/copilot-instructions.md",
+)
 
 
 def ensure_local_cadierno_excludes(project: Path) -> bool:

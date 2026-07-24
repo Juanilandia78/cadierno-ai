@@ -3,7 +3,8 @@
 ## v0.3.0
 
 - Stack de proyecto unificado bajo `.cadierno-ai/`.
-- Bridges locales e ignorados por Git para Codex, Claude y Cursor.
+- Bridges locales e ignorados por Git para Codex, Claude, Cursor, Gemini CLI y
+  VS Code/GitHub Copilot.
 - Índice operativo `.cadierno-ai/context.md`, actualizado por install,
   bootstrap y update.
 - Catálogo de skills opcionales con sugerencia, verificación de origen oficial

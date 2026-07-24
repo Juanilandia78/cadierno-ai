@@ -130,7 +130,7 @@ def main():
     adapters_parser = sub.add_parser("adapters", help="Configura bridges locales para asistentes de IA")
     adapters_sub = adapters_parser.add_subparsers(dest="adapters_command")
     adapters_enable = adapters_sub.add_parser("enable", help="Habilita adaptadores locales e ignorados por Git")
-    adapters_enable.add_argument("adapters", nargs="+", choices=["codex", "claude", "cursor"])
+    adapters_enable.add_argument("adapters", nargs="+", choices=["codex", "claude", "cursor", "gemini", "vscode", "copilot"])
     adapters_enable.add_argument("--path", default=".", help="Ruta del proyecto")
 
     context_parser = sub.add_parser("context", help="Genera el índice operativo local")

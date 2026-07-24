@@ -10,7 +10,7 @@ proyecto destino.
 python3 cadierno.py install /ruta/proyecto
 python3 cadierno.py bootstrap /ruta/proyecto
 python3 cadierno.py memory init /ruta/proyecto
-python3 cadierno.py adapters enable codex claude cursor --path /ruta/proyecto
+python3 cadierno.py adapters enable codex claude cursor gemini vscode copilot --path /ruta/proyecto
 ```
 
 `install` instala `.cadierno-ai/` y bridges locales ignorados por Git; `bootstrap` analiza el código; `memory init`
@@ -79,12 +79,13 @@ python3 cadierno.py uninstall /ruta/proyecto --purge
 
 ### `adapters enable`
 
-Configura bridges locales para que Codex, Claude y Cursor encuentren las
-instrucciones de Cadierno. Los archivos generados se excluyen del Git local:
+Configura bridges locales para que Codex, Claude, Cursor, Gemini CLI y
+VS Code/GitHub Copilot encuentren las instrucciones de Cadierno. Los archivos
+generados se excluyen del Git local:
 no se agregan al `.gitignore` versionado ni se suben al repositorio.
 
 ```bash
-python3 cadierno.py adapters enable codex claude cursor --path /ruta/proyecto
+python3 cadierno.py adapters enable codex claude cursor gemini vscode copilot --path /ruta/proyecto
 ```
 
 ### `context generate [path]`
